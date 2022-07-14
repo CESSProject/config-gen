@@ -1,0 +1,6 @@
+node_modules
+Dockerfile
+package-lock.json
+config.yaml
+README.md
+.tmp

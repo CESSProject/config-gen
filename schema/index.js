@@ -1,0 +1,32 @@
+
+const Joi = require('joi')
+const { nodeSchema } = require('./node.schema')
+const { chainSchema } = require('./chain.schema')
+const { schedulerSchema } = require('./scheduler.schema')
+const { bucketSchema } = require('./bucket.schema')
+
+function getConfigSchema(config) {
+  let sMap = {
+    node: nodeSchema.required(),
+  }
+
+  if (config.node.mode == "authority") {
+    sMap["chain"] = chainSchema.required()
+    sMap["scheduler"] = schedulerSchema.required()
+  }
+  else if (config.node.mode == "storage") {
+    sMap["bucket"] = bucketSchema.required()
+  }
+  else if (config.node.mode == "watcher") {
+    sMap["chain"] = chainSchema.required()
+  }
+  else {
+    throw Error("invalid config.node.mode:" + toString(config.node.type))
+  }
+
+  return Joi.object(sMap)
+}
+
+module.exports = {
+  getConfigSchema,
+}
