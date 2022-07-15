@@ -41,7 +41,7 @@ async function genChainComposeConfig(config) {
     '--rpc-port',
     '9933',
     '--ws-port',
-    '9948',
+    '9944',
     '--execution',
     'WASM',
     '--wasm-execution',
