@@ -4,6 +4,7 @@ const { nodeSchema } = require('./node.schema')
 const { chainSchema } = require('./chain.schema')
 const { schedulerSchema } = require('./scheduler.schema')
 const { bucketSchema } = require('./bucket.schema')
+const { kaleidoSchema } = require('./kaleido.schema')
 
 function getConfigSchema(config) {
   let sMap = {
@@ -13,6 +14,7 @@ function getConfigSchema(config) {
   if (config.node.mode == "authority") {
     sMap["chain"] = chainSchema.required()
     sMap["scheduler"] = schedulerSchema.required()
+    sMap["kaleido"] = kaleidoSchema.required()
   }
   else if (config.node.mode == "storage") {
     sMap["bucket"] = bucketSchema.required()

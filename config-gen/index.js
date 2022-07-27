@@ -6,6 +6,7 @@ const { writeConfig, } = require('../utils')
 const { genChainConfig, genChainComposeConfig } = require('./chain-config.gen')
 const { genSchedulerConfig, genSchedulerComposeConfig } = require('./scheduler-config.gen')
 const { genBucketConfig, genBucketComposeConfig } = require('./bucket-config.gen')
+const { genKaleidoConfig, genKaleidoComposeConfig } = require('./kaleido-config.gen')
 const { logger } = require('../logger')
 
 /**
@@ -40,6 +41,12 @@ const configGenerators = [{
   to: path.join('bucket', 'config.toml'),
   composeName: 'bucket',
   composeFunc: genBucketComposeConfig,
+}, {
+  name: 'kaleido',
+  configFunc: genKaleidoConfig,
+  to: path.join('kaleido', 'config.toml'),
+  composeName: 'kaleido',
+  composeFunc: genKaleidoComposeConfig,
 }]
 
 async function genConfig(config, outputOpts) {

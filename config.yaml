@@ -4,7 +4,7 @@ node:
   mode: "authority"
   externalIp: "127.0.0.1"
   domainName: ""
-  chainWsUrl: "ws://127.0.0.1:9948"
+  chainWsUrl: "ws://127.0.0.1:9944"
   ## the profile of node: dev/test/prod
   profile: "dev"
 
@@ -31,3 +31,9 @@ bucket:
   signPhrase: "abc"
   diskPath: "/disks/1"
   extraCmdArgs: " -bb  ss --sfew 3"
+
+## kaleido configurations
+kaleido:
+  sgxDriver: "dcap"
+  sgxDevices: ["/dev/sgx/enclave", "/dev/sgx/provision"]
+  port: 8080
