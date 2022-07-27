@@ -1,7 +1,7 @@
 const schedulerHomePath = '/opt/cess/authority/scheduler'
 
 async function genSchedulerConfig(config, outputCfg) {
-  const apiConfig = {
+  const cfg = {
     RpcAddr: config.node.chainWsUrl,
     ServiceAddr: config.node.externalIp,
     ServicePort: config.scheduler.port,
@@ -10,7 +10,7 @@ async function genSchedulerConfig(config, outputCfg) {
     DataDir: "/opt/scheduler",
   }
   return {
-    config: apiConfig,
+    config: cfg,
     paths: [{
       required: true,
       path: schedulerHomePath,
