@@ -1,5 +1,5 @@
 {
-  "name": "config-generator",
+  "name": "config-gen",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

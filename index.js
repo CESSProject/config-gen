@@ -8,11 +8,9 @@ const { getConfigSchema } = require('./schema')
 const { logger } = require('./logger')
 const { writeYaml } = require('./utils')
 
-console.log('cess config generator')
-
 async function loadConfig(file) {
   logger.debug('Loading config file: %s', file)
-  const config = yaml.safeLoad(await fs.readFile('config.yaml', 'utf8'))
+  const config = yaml.safeLoad(await fs.readFile(file, 'utf8'))
   const configSchema = getConfigSchema(config)
   const value = await configSchema.validateAsync(config, {
     allowUnknown: true,
@@ -39,17 +37,22 @@ async function dumpConfigPaths(toFile, data) {
   await fs.outputFile(toFile, paths.join('\n'))
 }
 
-function getConfigFileName() {
-  const args = process.argv.slice(2);
-  if (args.length >= 1) {
-    return args[0]
-  }
-  return 'config.yaml'
-}
-
 async function main(){
   try {
-    await loadConfig(getConfigFileName())
+    const args = process.argv.slice(2);
+    let configFile = "config.yaml";
+    if (args.length >= 1) {
+      if (args[0].toLowerCase() == "version") {
+        const {name, version} = require('./package.json');
+        console.log(name, version);
+        return;
+      }
+      else {
+        configFile = args[0];
+      }
+    }
+    
+    await loadConfig(configFile);    
   } catch(e) {
     logger.error('failed to load config: %o', e.message)
     process.exit(1)

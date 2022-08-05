@@ -56,7 +56,7 @@ async function genChainComposeConfig(config) {
     args.push('--validator', '--pruning', 'archive')
   }
   else if (config.node.mode == "watcher") {
-    args.push('--no-telemetry', '--pruning', '8000', '--ws-max-connections', '5000', '--ws-external', '--rpc-external', '--rpc-cors', 'all');
+    args.push('--pruning', config.chain.pruning, '--ws-max-connections', '5000', '--ws-external', '--rpc-external', '--rpc-cors', 'all');
   }
 
   if (config.chain.extraCmdArgs) {

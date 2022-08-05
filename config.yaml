@@ -1,7 +1,7 @@
 ## node configurations template
 node:
   ## the mode of node: authority/storage/watcher
-  mode: "authority"
+  mode: "watcher"
   externalIp: "127.0.0.1"
   domainName: ""
   chainWsUrl: "ws://127.0.0.1:9944"
