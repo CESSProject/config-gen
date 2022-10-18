@@ -17,6 +17,7 @@ function getConfigSchema(config) {
     // sMap["kaleido"] = kaleidoSchema.required()
   }
   else if (config.node.mode == "storage") {
+    sMap["chain"] = chainSchema.required()
     sMap["bucket"] = bucketSchema.required()
   }
   else if (config.node.mode == "watcher") {
