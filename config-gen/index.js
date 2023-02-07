@@ -41,12 +41,12 @@ const configGenerators = [{
   to: path.join('bucket', 'config.toml'),
   composeName: 'bucket',
   composeFunc: genBucketComposeConfig,
-// }, {
-//   name: 'kaleido',
-//   configFunc: genKaleidoConfig,
-//   to: path.join('kaleido', 'config.toml'),
-//   composeName: 'kaleido',
-//   composeFunc: genKaleidoComposeConfig,
+}, {
+  name: 'kaleido',
+  configFunc: genKaleidoConfig,
+  to: path.join('kaleido', 'config.toml'),
+  composeName: 'kaleido',
+  composeFunc: genKaleidoComposeConfig,
 }]
 
 async function genConfig(config, outputOpts) {
