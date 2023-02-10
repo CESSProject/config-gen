@@ -7,6 +7,7 @@ const { genChainConfig, genChainComposeConfig } = require('./chain-config.gen')
 const { genSchedulerConfig, genSchedulerComposeConfig } = require('./scheduler-config.gen')
 const { genBucketConfig, genBucketComposeConfig } = require('./bucket-config.gen')
 const { genKaleidoConfig, genKaleidoComposeConfig } = require('./kaleido-config.gen')
+const { genWatchtowerComposeConfig } = require('./watchtower-config.gen')
 const { logger } = require('../logger')
 
 /**
@@ -47,6 +48,10 @@ const configGenerators = [{
   to: path.join('kaleido', 'config.toml'),
   composeName: 'kaleido',
   composeFunc: genKaleidoComposeConfig,
+}, {
+  name: 'watchtower',
+  composeName: 'watchtower',
+  composeFunc: genWatchtowerComposeConfig,
 }]
 
 async function genConfig(config, outputOpts) {
@@ -54,7 +59,7 @@ async function genConfig(config, outputOpts) {
   let outputs = []
   const { baseDir } = outputOpts
   for (const cg of configGenerators) {
-    if (!config[cg.name]) {
+    if (!config[cg.name] || !cg.configFunc) {
       continue
     }
     const ret = await cg.configFunc(config, outputOpts)
@@ -77,7 +82,7 @@ async function genComposeConfig(config) {
   }
 
   for (const cg of configGenerators) {
-    if (!config[cg.name]) {
+    if (!(config[cg.name] || cg.name === "watchtower")) {
       continue
     }
     const cfg = await cg.composeFunc(config)
