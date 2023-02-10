@@ -38,6 +38,10 @@ async function writeToml(path, cfg) {
   return true
 }
 
+function imageTagByProfile(profile) {
+  return (profile === "prod" || !profile) ? "latest" : profile
+}
+
 
 module.exports = {
   createDir,
@@ -45,4 +49,5 @@ module.exports = {
   writeJson,
   writeYaml,
   writeToml,
+  imageTagByProfile,
 }

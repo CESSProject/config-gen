@@ -1,3 +1,4 @@
+const { imageTagByProfile } = require('../utils')
 const { logger } = require('../logger')
 
 const kaleidoHomePath = '/opt/cess/authority/kaleido'
@@ -26,7 +27,7 @@ async function genKaleidoComposeConfig(config, outputCfg) {
     logger.warn("the sgxDevices is empty");
   }
   return {
-    image: 'cesslab/cess-kaleido:latest',
+    image: `cesslab/cess-kaleido-${config.kaleido.sgxDriver}:${imageTagByProfile(config.node.profile)}`,
     network_mode: 'host',
     restart: 'always',
     volumes: [

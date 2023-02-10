@@ -1,3 +1,4 @@
+const { imageTagByProfile } = require('../utils')
 const schedulerHomePath = '/opt/cess/authority/scheduler'
 
 async function genSchedulerConfig(config, outputCfg) {
@@ -5,6 +6,7 @@ async function genSchedulerConfig(config, outputCfg) {
     RpcAddr: config.node.chainWsUrl,
     ServiceAddr: config.node.externalIp,
     ServicePort: config.scheduler.port,
+    SgxPort: config.scheduler.sgxPort,
     CtrlPrk: config.scheduler.controllerPhrase,
     StashAcc: config.scheduler.stashAccount,
     DataDir: "/opt/scheduler",
@@ -30,7 +32,7 @@ async function genSchedulerComposeConfig(config) {
     args.push(...extraCmdArgs);
   }
   return {
-    image: 'cesslab/cess-scheduler:latest',
+    image: 'cesslab/cess-scheduler:' + imageTagByProfile(config.node.profile),
     network_mode: 'host',
     restart: 'always',
     volumes: [

@@ -1,3 +1,4 @@
+const { imageTagByProfile } = require('../utils')
 const bucketHomePath = "/opt/cess/storage/bucket"
 
 async function genBucketConfig(config, outputCfg) {
@@ -30,9 +31,9 @@ async function genBucketComposeConfig(config) {
   if (config.bucket.extraCmdArgs) {
     const extraCmdArgs = config.bucket.extraCmdArgs.split(' ').map(e => e.trim()).filter(e => e !== '');
     args.push(...extraCmdArgs);
-  }
+  }  
   return {
-    image: 'cesslab/cess-bucket:latest',
+    image: 'cesslab/cess-bucket:' + imageTagByProfile(config.node.profile),
     network_mode: 'host',
     restart: 'always',
     volumes: [
