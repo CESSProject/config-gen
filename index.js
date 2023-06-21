@@ -54,7 +54,8 @@ async function main(){
     
     await loadConfig(configFile);    
   } catch(e) {
-    logger.error('failed to load config: %o', e.message)
+    logger.error('failed to load config: %o', e.message);
+    console.trace(e);
     process.exit(1)
   }
 }

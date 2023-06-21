@@ -116,3 +116,5 @@ dist
 .pnp.*
 package-lock.json
 .tmp
+
+.vscode

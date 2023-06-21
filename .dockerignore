@@ -4,3 +4,4 @@ package-lock.json
 config.yaml
 README.md
 .tmp
+.vscode

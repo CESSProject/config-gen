@@ -2,6 +2,7 @@ async function genWatchtowerComposeConfig(config, outputCfg) {
   let args = ["--cleanup", "--interval", "300"]
   return {
     image: 'containrrr/watchtower',
+    container_name: 'watchtower',
     network_mode: 'host',
     restart: 'always',
     volumes: [
