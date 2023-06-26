@@ -1,16 +1,15 @@
 const { imageTagByProfile } = require('../utils')
 const bucketHomePath = "/opt/cess/storage/bucket"
 
-async function genBucketConfig(config, outputCfg) {
+async function genBucketConfig(config) {
   const apiConfig = {
-    RpcAddr: config.node.chainWsUrl,
-    ServiceIP: config.node.externalIp,
-    ServicePort: config.bucket.port,
-    DomainName: config.node.domainName,
-    SignatureAcc: config.bucket.signPhrase,
-    IncomeAcc: config.bucket.incomeAccount,
-    StorageSpace: config.bucket.space,
-    MountedPath: "/opt/bucket-disk",
+    Rpc: [config.node.chainWsUrl],
+    Port: config.bucket.port,
+    Boot: [config.bucket.bootAddr || process.env["BUKET_BOOT"] || "_dnsaddr.bootstrap-kldr.cess.cloud"],
+    Mnemonic: config.bucket.signPhrase,
+    EarningsAcc: config.bucket.incomeAccount,
+    UseSpace: config.bucket.space,
+    Workspace: "/opt/bucket-disk",
   }
   return {
     config: apiConfig,
@@ -26,7 +25,7 @@ async function genBucketComposeConfig(config) {
     "./cess-bucket",
     "run",
     "-c", 
-    "/opt/bucket/config.toml",
+    "/opt/bucket/config.yaml",
   ]
   if (config.bucket.extraCmdArgs) {
     const extraCmdArgs = config.bucket.extraCmdArgs.split(' ').map(e => e.trim()).filter(e => e !== '');

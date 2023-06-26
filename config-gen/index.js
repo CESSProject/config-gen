@@ -35,7 +35,7 @@ const configGenerators = [
   {
     name: "bucket",
     configFunc: genBucketConfig,
-    to: path.join("bucket", "config.toml"),
+    to: path.join("bucket", "config.yaml"),
     composeFunc: genBucketComposeConfig,
   },
   {
