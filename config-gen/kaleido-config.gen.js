@@ -61,6 +61,7 @@ async function genKaleidoComposeConfigs(config, _) {
           ipv4_address: "172.18.0.4",
         },
       },
+      extra_hosts: ["host.docker.internal:host-gateway"],
       volumes: [`${workDir}:/sgx`, `${kaleidoHomePath}/key:/kaleido`],
       depends_on: ["kld-sgx"],
       logging: {

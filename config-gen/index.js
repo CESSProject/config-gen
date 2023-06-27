@@ -71,7 +71,8 @@ async function genConfig(config, outputOpts) {
 async function genComposeConfig(config) {
   // docker compose config generation
   let output = {
-    version: "3.0",
+    version: "3",
+    name: `cess-${config.node.mode}`,
     services: {},
   };
 
@@ -119,6 +120,10 @@ async function genComposeConfig(config) {
         },
       },
     };
+    let chainCmd = output["services"]?.chain?.command;
+    if (Array.isArray(chainCmd)) {
+      chainCmd.push('--unsafe-ws-external', '--rpc-cors', 'all');
+    }    
   }
 
   logger.info("Generating docker compose file done");
