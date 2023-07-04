@@ -39,7 +39,7 @@ async function writeToml(path, cfg) {
 }
 
 function imageTagByProfile(profile) {
-  return (profile === "prod" || !profile) ? "latest" : profile
+  return profile
 }
 
 

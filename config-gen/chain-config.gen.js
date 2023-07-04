@@ -21,7 +21,7 @@ async function genChainComposeConfig(config) {
   let volumes = [
     getChainHomePath(config) + ':/opt/cess/data'
   ];
-  if (config.node.profile == "dev") {
+  if (config.node.profile == "devnet") {
     chainSpec = config.chain.chainSpec || "cess-devnet"
     // in the config-gen container enviroment
     const customSpecInCg = "/opt/app/etc/customSpecRaw.json";

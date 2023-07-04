@@ -1,12 +1,12 @@
 ## node configurations template
 node:
   ## the mode of node: authority/storage/watcher
-  mode: "storage"
+  mode: "authority"
   externalIp: "127.0.0.1"
   domainName: ""
   chainWsUrl: "ws://127.0.0.1:9944"
-  ## the profile of node: dev/test/prod
-  profile: "dev"
+  ## the profile of node: devnet/testnet/mainnet
+  profile: "devnet"
 
 ## chain configurations
 chain:
