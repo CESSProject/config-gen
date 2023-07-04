@@ -6,14 +6,14 @@ usage() {
 	echo "    $0 [options]"
     echo "Options:"
     echo "     -p publish image"
-    echo "     -d dev tag"
+    echo "     -n network profile, options: devnet, testnet, mainnet"
 	exit 1;
 }
 
 PUBLISH=0
-DEV=0
+NETWORK="devnet"
 
-while getopts ":hpd" opt; do
+while getopts ":hpn:" opt; do
     case ${opt} in
         h )
 			usage
@@ -21,8 +21,8 @@ while getopts ":hpd" opt; do
         p )
             PUBLISH=1
             ;;
-        d )
-            DEV=1
+        n )
+            NETWORK=${OPTARG}
             ;;
         \? )
             echo "Invalid Option: -$OPTARG" 1>&2
@@ -34,10 +34,11 @@ done
 DOCKER_FILE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 CTX_DIR=$DOCKER_FILE_DIR
 IMAGEID="cesslab/config-gen"
-if [ "$DEV" -eq "1" ]; then
-    IMAGEID="$IMAGEID:dev"
+if [ x"$NETWORK" == x"devnet" ] || [ x"$NETWORK" == x"testnet" ] || [ x"$NETWORK" == x"mainnet" ]; then
+    IMAGEID="$IMAGEID:$NETWORK"
 else
-    IMAGEID="$IMAGEID:latest"
+    echo "invalid network option, use 'devnet' instead"
+    IMAGEID="$IMAGEID:devnet"
 fi
 
 docker build -t $IMAGEID -f $DOCKER_FILE_DIR/Dockerfile $CTX_DIR
