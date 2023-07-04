@@ -1,12 +1,12 @@
 ## node configurations template
 node:
   ## the mode of node: authority/storage/watcher
-  mode: "watcher"
+  mode: "authority"
   externalIp: "127.0.0.1"
   domainName: ""
   chainWsUrl: "ws://127.0.0.1:9944"
-  ## the profile of node: dev/test/prod
-  profile: "dev"
+  ## the profile of node: devnet/testnet/mainnet
+  profile: "devnet"
 
 ## chain configurations
 chain:
@@ -16,13 +16,6 @@ chain:
   port: 30336
   extraCmdArgs: "-a 333 --anfew afew"
 
-## scheduler configurations
-scheduler:
-  port: 15000
-  stashAccount: "abc"
-  controllerPhrase: "abc"
-  extraCmdArgs: "-bb afe --fewfew   aa"
-
 ## bucket configurations
 bucket:
   port: 15001
@@ -30,10 +23,13 @@ bucket:
   incomeAccount: "abc"
   signPhrase: "abc"
   diskPath: "/disks/1"
+  bootAddr: "_dnsaddr.bootstrap-kldr.cess.cloud"
   extraCmdArgs: " -bb  ss --sfew 3"
 
 ## kaleido configurations
 kaleido:
-  sgxDriver: "dcap"
-  sgxDevices: ["/dev/sgx/enclave", "/dev/sgx/provision"]
-  port: 8080
+  kldPort: 4001
+  rotPort: 10010
+  stashAccount: "cXh9q6D97jZ4XH31SMAGSUNVNsTzg5hThuhoawQFj2szbvsQD"
+  controllerPhrase: "worth swallow between garage novel repair february panther million report hip token"
+

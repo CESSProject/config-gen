@@ -6,7 +6,7 @@ const nodeSchema = Joi.object({
   domainName: Joi.string().allow(''),
   chainWsUrl: Joi.string().required(),
   region: Joi.string().default("en"),
-  profile: Joi.string().default("prod"),
+  profile: Joi.string().valid('devnet', 'testnet', 'mainnet').default("testnet"),
 })
 
 module.exports = {

@@ -1,13 +1,16 @@
 /**
  * config generators
  */
-const path = require('path')
-const { writeConfig, } = require('../utils')
-const { genChainConfig, genChainComposeConfig } = require('./chain-config.gen')
-const { genSchedulerConfig, genSchedulerComposeConfig } = require('./scheduler-config.gen')
-const { genBucketConfig, genBucketComposeConfig } = require('./bucket-config.gen')
-const { genKaleidoConfig, genKaleidoComposeConfig } = require('./kaleido-config.gen')
-const { logger } = require('../logger')
+const path = require("path");
+const { writeConfig } = require("../utils");
+const { genChainConfig, genChainComposeConfig } = require("./chain-config.gen");
+const {
+  genBucketConfig,
+  genBucketComposeConfig,
+} = require("./bucket-config.gen");
+const { genKaleidoComposeConfigs } = require("./kaleido-config.gen");
+const { genWatchtowerComposeConfig } = require("./watchtower-config.gen");
+const { logger } = require("../logger");
 
 /**
  * configuration of generators to use
@@ -19,84 +22,116 @@ const { logger } = require('../logger')
  *    required: boolean whether this file is a mandontary requirement
  *    path: the file path
  *
- * composeName: the compose service name of this generator
  * async composeFunc(config) => composeConfig
  * return the service definition for this generator
  */
-const configGenerators = [{
-  name: 'chain',
-  configFunc: genChainConfig,
-  to: path.join('chain', 'config.json'),
-  composeName: 'chain',
-  composeFunc: genChainComposeConfig,
-}, {
-  name: 'scheduler',
-  configFunc: genSchedulerConfig,
-  to: path.join('scheduler', 'config.toml'),
-  composeName: 'scheduler',
-  composeFunc: genSchedulerComposeConfig,
-}, {
-  name: 'bucket',
-  configFunc: genBucketConfig,
-  to: path.join('bucket', 'config.toml'),
-  composeName: 'bucket',
-  composeFunc: genBucketComposeConfig,
-// }, {
-//   name: 'kaleido',
-//   configFunc: genKaleidoConfig,
-//   to: path.join('kaleido', 'config.toml'),
-//   composeName: 'kaleido',
-//   composeFunc: genKaleidoComposeConfig,
-}]
+const configGenerators = [
+  {
+    name: "chain",
+    configFunc: genChainConfig,
+    to: path.join("chain", "config.json"),
+    composeFunc: genChainComposeConfig,
+  },
+  {
+    name: "bucket",
+    configFunc: genBucketConfig,
+    to: path.join("bucket", "config.yaml"),
+    composeFunc: genBucketComposeConfig,
+  },
+  {
+    name: "kaleido",
+    composeFunc: genKaleidoComposeConfigs,
+  },
+  {
+    name: "watchtower",
+    composeFunc: genWatchtowerComposeConfig,
+  },
+];
 
 async function genConfig(config, outputOpts) {
   // application config generation
-  let outputs = []
-  const { baseDir } = outputOpts
+  let outputs = [];
+  const { baseDir } = outputOpts;
   for (const cg of configGenerators) {
-    if (!config[cg.name]) {
-      continue
+    if (!config[cg.name] || !cg.configFunc) {
+      continue;
     }
-    const ret = await cg.configFunc(config, outputOpts)
-    await writeConfig(path.join(baseDir, cg.to), ret.config)
+    const ret = await cg.configFunc(config, outputOpts);
+    await writeConfig(path.join(baseDir, cg.to), ret.config);
     outputs.push({
       generator: cg.name,
       ...ret,
-    })
+    });
   }
 
-  logger.info('Generating configurations done')
-  return outputs
+  logger.info("Generating configurations done");
+  return outputs;
 }
 
 async function genComposeConfig(config) {
   // docker compose config generation
   let output = {
-    version: '3.0',
+    version: "3",
+    name: `cess-${config.node.mode}`,
     services: {},
-  }
+  };
+
+  var hasKaleidoNetwork = false;
+  let buildComposeService = function (serviceCfg, name, struct) {
+    if (!serviceCfg["container_name"]) {
+      serviceCfg["container_name"] = name;
+    }
+    if (serviceCfg.networks && serviceCfg.networks["kaleido"]) {
+      hasKaleidoNetwork = true;
+    }
+    return {
+      ...struct,
+      services: {
+        ...struct.services,
+        [serviceCfg.container_name]: serviceCfg,
+      },
+    };
+  };
 
   for (const cg of configGenerators) {
-    if (!config[cg.name]) {
-      continue
+    if (!(config[cg.name] || cg.name === "watchtower")) {
+      continue;
     }
-    const cfg = await cg.composeFunc(config)
-    cfg["container_name"] = cg.composeName
-    output = {
-      ...output,
-      services: {
-        ...output.services,
-        [cg.composeName]: cfg,
-      }
+    const serviceCfg = await cg.composeFunc(config);
+    if (Array.isArray(serviceCfg)) {
+      serviceCfg.forEach(
+        (e) => (output = buildComposeService(e, cg.name, output))
+      );
+    } else {
+      output = buildComposeService(serviceCfg, cg.name, output);
     }
   }
+  if (hasKaleidoNetwork) {
+    output["networks"] = {
+      kaleido: {
+        name: "kaleido",
+        driver: "bridge",
+        ipam: {
+          config: [
+            {
+              subnet: "172.18.0.0/16",
+            },
+          ],
+        },
+      },
+    };
+    let chainCmd = output["services"]?.chain?.command;
+    if (Array.isArray(chainCmd)) {
+      chainCmd.push('--unsafe-ws-external', '--rpc-cors', 'all');
+    }    
+  }
 
-  logger.info('Generating docker compose file done')
+  logger.info("Generating docker compose file done");
 
-  return output
+  return output;
 }
 
 module.exports = {
   genConfig,
   genComposeConfig,
-}
+};

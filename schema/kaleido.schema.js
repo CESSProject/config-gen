@@ -1,10 +1,13 @@
 const Joi = require('joi')
 
 const kaleidoSchema = Joi.object({
-  port: Joi.number().port().default(8080),
-  sgxDriver: Joi.string(),
-  sgxDevices: Joi.array(),
-  extraCmdArgs: Joi.string(),
+  rotPort: Joi.number().port().default(10010),
+  kldPort: Joi.number().port().default(4001),
+  stashAccount: Joi.string().required(),
+  controllerPhrase: Joi.string().required(),
+  bootPeerIds: Joi.string().optional(),
+  bootDnsaddr: Joi.string().optional(),
+  workDir: Joi.string().optional(),
 })
 
 module.exports = {

@@ -1,3 +1,4 @@
+const { imageTagByProfile } = require('../utils')
 const fs = require('fs-extra')
 
 function getChainHomePath(config) {
@@ -20,7 +21,8 @@ async function genChainComposeConfig(config) {
   let volumes = [
     getChainHomePath(config) + ':/opt/cess/data'
   ];
-  if (config.node.profile == "dev") {
+  if (config.node.profile == "devnet") {
+    chainSpec = config.chain.chainSpec || "cess-devnet"
     // in the config-gen container enviroment
     const customSpecInCg = "/opt/app/etc/customSpecRaw.json";
     if (fs.pathExistsSync(customSpecInCg)) {
@@ -56,7 +58,7 @@ async function genChainComposeConfig(config) {
     args.push('--validator', '--pruning', 'archive')
   }
   else if (config.node.mode == "watcher") {
-    args.push('--pruning', config.chain.pruning, '--ws-max-connections', '5000', '--ws-external', '--rpc-external', '--rpc-cors', 'all');
+    args.push('--pruning', `${config.chain.pruning}`, '--ws-max-connections', '5000', '--ws-external', '--rpc-external', '--rpc-cors', 'all');
   }
 
   if (config.chain.extraCmdArgs) {
@@ -65,7 +67,7 @@ async function genChainComposeConfig(config) {
   }
 
   return {
-    image: 'cesslab/cess-chain:latest',
+    image: 'cesslab/cess-chain:' + imageTagByProfile(config.node.profile),
     network_mode: 'host',
     volumes: volumes,
     command: args,

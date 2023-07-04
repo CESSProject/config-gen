@@ -6,6 +6,7 @@ const bucketSchema = Joi.object({
   port: Joi.number().port().default(15001),
   diskPath: Joi.string().required(),
   space: Joi.number().port().default(300),
+  bootAddr: Joi.string().optional(),
   extraCmdArgs: Joi.string(),
 })
 
