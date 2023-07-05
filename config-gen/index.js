@@ -120,10 +120,25 @@ async function genComposeConfig(config) {
         },
       },
     };
-    let chainCmd = output["services"]?.chain?.command;
-    if (Array.isArray(chainCmd)) {
-      chainCmd.push('--unsafe-ws-external', '--rpc-cors', 'all');
-    }    
+    let chain = output["services"]?.chain;
+    if (chain) {
+      const chainPort = config.chain.port;
+      delete chain.network_mode;
+      chain["networks"] = {
+        kaleido: {
+          ipv4_address: "172.18.0.9",
+        },
+      };
+      chain["ports"] = ["9933:9933", "9944:9944", `${chainPort}:${chainPort}`];
+      let chainCmd = chain.command;
+      if (Array.isArray(chainCmd)) {
+        chainCmd.push(
+          "--unsafe-ws-external",
+          "--rpc-cors",
+          "all"
+        );
+      }
+    }
   }
 
   logger.info("Generating docker compose file done");
