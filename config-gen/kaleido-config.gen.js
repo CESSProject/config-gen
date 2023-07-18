@@ -53,7 +53,7 @@ async function genKaleidoComposeConfigs(config, _) {
       ports: [`${kldCfg.rotPort}:10010`],
       command: agentCmds,
       environment: [
-        "RUST_LOG=RUST_LOG=debug,netlink_proto=info,libp2p_ping=info,multistream_select=info,libp2p_kad=info,yamux=info,libp2p_tcp=info,libp2p_dns=info,libp2p_swarm=info",
+        "RUST_LOG=debug,netlink_proto=info,libp2p_ping=info,multistream_select=info,libp2p_kad=info,yamux=info,libp2p_tcp=info,libp2p_dns=info,libp2p_swarm=info",
         "RUST_BACKTRACE=1",
       ],
       networks: {
