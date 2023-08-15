@@ -22,7 +22,6 @@ async function genBucketConfig(config) {
 
 async function genBucketComposeConfig(config) {
   let args = [
-    "./cess-bucket",
     "run",
     "-c", 
     "/opt/bucket/config.yaml",
