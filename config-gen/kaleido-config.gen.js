@@ -43,7 +43,6 @@ async function genKaleidoComposeConfigs(config, _) {
         },
       },
       volumes: [`${workDir}:/sgx`, `${kaleidoHomePath}/key:/kaleido`],
-      depends_on: ["kaleido-kafka"],
       logging: {
         driver: "json-file",
         options: {
