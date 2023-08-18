@@ -1,4 +1,4 @@
-const Joi = require('joi')
+const Joi = require("joi");
 
 const kaleidoSchema = Joi.object({
   rotPort: Joi.number().port().default(10010),
@@ -8,8 +8,9 @@ const kaleidoSchema = Joi.object({
   bootPeerIds: Joi.string().optional(),
   bootDnsaddr: Joi.string().optional(),
   workDir: Joi.string().optional(),
-})
+  allowLogCollection: Joi.boolean().optional(),
+});
 
 module.exports = {
   kaleidoSchema,
-}
+};

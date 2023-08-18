@@ -22,6 +22,9 @@ async function genKaleidoComposeConfigs(config, _) {
   if (kldCfg.bootDnsaddr) {
     agentCmds.push(`--boot-dnsaddr=${kldCfg.bootDnsaddr}`);
   }
+  if (kldCfg.allowLogCollection) {
+    agentCmds.push("--allow-log-transport=1");
+  }
 
   return [
     {
@@ -35,7 +38,7 @@ async function genKaleidoComposeConfigs(config, _) {
         "RUST_BACKTRACE=full",
         `CTRL_WALLET_SEED=${kldCfg.controllerPhrase}`,
         `STAS_WALLET_ADDR=${kldCfg.stashAccount}`,
-        `LISTEN_ADDRESS=/ip4/${kldServerIp}/tcp/4001`
+        `LISTEN_ADDRESS=/ip4/${kldServerIp}/tcp/4001`,
       ],
       networks: {
         kaleido: {
@@ -69,7 +72,11 @@ async function genKaleidoComposeConfigs(config, _) {
         },
       },
       extra_hosts: ["host.docker.internal:host-gateway"],
-      volumes: [`${workDir}:/sgx`, `${kaleidoHomePath}/key:/kaleido`],
+      volumes: [
+        `${workDir}:/sgx`,
+        `${kaleidoHomePath}/key:/kaleido`,
+        "/var/lib/docker/containers:/logs",
+      ],
       depends_on: ["kld-sgx"],
       logging: {
         driver: "json-file",
