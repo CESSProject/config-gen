@@ -5,7 +5,6 @@ const kaleidoHomePath = "/opt/cess/authority/kaleido";
 
 async function genKaleidoComposeConfigs(config, _) {
   const kldCfg = config.kaleido;
-  const workDir = kldCfg.workDir || `${kaleidoHomePath}/data`;
   const kldServerIp = "172.18.0.3";
   const rotServerIp = "172.18.0.4";
   let agentCmds = [
@@ -45,7 +44,7 @@ async function genKaleidoComposeConfigs(config, _) {
           ipv4_address: kldServerIp,
         },
       },
-      volumes: [`${workDir}:/sgx`, `${kaleidoHomePath}/key:/kaleido`],
+      volumes: [`${kaleidoHomePath}/key:/kaleido`],
       logging: {
         driver: "json-file",
         options: {
@@ -73,7 +72,6 @@ async function genKaleidoComposeConfigs(config, _) {
       },
       extra_hosts: ["host.docker.internal:host-gateway"],
       volumes: [
-        `${workDir}:/sgx`,
         `${kaleidoHomePath}/key:/kaleido`,
         "/var/lib/docker/containers:/logs",
       ],
