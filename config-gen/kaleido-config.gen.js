@@ -12,6 +12,8 @@ async function genKaleidoComposeConfigs(config, _) {
     `--kld-api-server-url=http://${kldServerIp}:7001`,
     `--cess-node-address=${config.node.chainWsUrl}`,
   ];
+  let sgxVolumeMappings = [`${kaleidoHomePath}/key:/kaleido`];
+  let agentVolumeMappings = [...sgxVolumeMappings];
   if (config.node.externalIp) {
     agentCmds.push(`--ext-address=/ip4/${config.node.externalIp}/tcp/10010`);
   }
@@ -23,6 +25,7 @@ async function genKaleidoComposeConfigs(config, _) {
   }
   if (kldCfg.allowLogCollection) {
     agentCmds.push("--allow-log-transport=1");
+    agentVolumeMappings.push("/var/lib/docker/containers:/logs");
   }
 
   return [
@@ -44,7 +47,7 @@ async function genKaleidoComposeConfigs(config, _) {
           ipv4_address: kldServerIp,
         },
       },
-      volumes: [`${kaleidoHomePath}/key:/kaleido`],
+      volumes: sgxVolumeMappings,
       logging: {
         driver: "json-file",
         options: {
@@ -71,10 +74,7 @@ async function genKaleidoComposeConfigs(config, _) {
         },
       },
       extra_hosts: ["host.docker.internal:host-gateway"],
-      volumes: [
-        `${kaleidoHomePath}/key:/kaleido`,
-        "/var/lib/docker/containers:/logs",
-      ],
+      volumes: agentVolumeMappings,
       depends_on: ["kld-sgx"],
       logging: {
         driver: "json-file",
