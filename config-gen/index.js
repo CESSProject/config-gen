@@ -132,18 +132,36 @@ async function genComposeConfig(config) {
       chain["ports"] = ["9933:9933", "9944:9944", `${chainPort}:${chainPort}`];
       let chainCmd = chain.command;
       if (Array.isArray(chainCmd)) {
-        chainCmd.push(
-          "--unsafe-ws-external",
-          "--rpc-cors",
-          "all"
-        );
+        chainCmd.push("--unsafe-ws-external", "--rpc-cors", "all");
       }
     }
   }
 
+  handleContainersToWatch(output, config?.node?.noWatchContainers);
+
   logger.info("Generating docker compose file done");
 
   return output;
+}
+
+function handleContainersToWatch(dockerComposeConfig, noWatchContainers) {
+  let watchtowerSvc = dockerComposeConfig.services["watchtower"];
+  if (!watchtowerSvc) {
+    console.assert(watchtowerSvc);
+    return;
+  }
+  const containers = [];
+  noWatchContainers = new Array(...(noWatchContainers || []));
+  for (const [_, val] of Object.entries(dockerComposeConfig.services)) {
+    const containerName = val.container_name;
+    if (
+      containerName != "watchtower" &&
+      noWatchContainers.indexOf(containerName) == -1
+    ) {
+      containers.push(containerName);
+    }
+  }
+  watchtowerSvc.command.push("--enable-lifecycle-hooks", ...containers);
 }
 
 module.exports = {

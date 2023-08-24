@@ -7,6 +7,7 @@ const nodeSchema = Joi.object({
   chainWsUrl: Joi.string().required(),
   region: Joi.string().default("en"),
   profile: Joi.string().valid('devnet', 'testnet', 'mainnet').default("testnet"),
+  noWatchContainers: Joi.array().optional(),
 })
 
 module.exports = {
