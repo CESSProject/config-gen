@@ -2,8 +2,9 @@ const { imageTagByProfile } = require('../utils')
 const bucketHomePath = "/opt/cess/storage/bucket"
 
 async function genBucketConfig(config) {
+  const chainWsUrls = [config.node.chainWsUrl, ...(config.node.backupChainWsUrls || [])];
   const apiConfig = {
-    Rpc: [config.node.chainWsUrl],
+    Rpc: chainWsUrls,
     Port: config.bucket.port,
     Boot: [config.bucket.bootAddr || process.env["BUKET_BOOT"] || "_dnsaddr.bootstrap-kldr.cess.cloud"],
     Mnemonic: config.bucket.signPhrase,
