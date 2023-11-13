@@ -7,6 +7,7 @@ const bucketSchema = Joi.object({
   diskPath: Joi.string().required(),
   space: Joi.number().port().default(300),
   bootAddr: Joi.string().optional(),
+  useCpuCores: Joi.number().default(0),
   extraCmdArgs: Joi.string(),
 })
 

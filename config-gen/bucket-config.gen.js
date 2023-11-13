@@ -11,6 +11,7 @@ async function genBucketConfig(config) {
     EarningsAcc: config.bucket.incomeAccount,
     UseSpace: config.bucket.space,
     Workspace: "/opt/bucket-disk",
+    UseCpu: config.bucket.useCpuCores || 0
   }
   return {
     config: apiConfig,
