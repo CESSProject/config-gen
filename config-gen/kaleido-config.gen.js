@@ -8,21 +8,14 @@ async function genKaleidoComposeConfigs(config, _) {
   const kldServerIp = "172.18.0.3";
   const rotServerIp = "172.18.0.4";
   let agentCmds = [
-    `--listen-address=/ip4/${rotServerIp}/tcp/10010`,
-    `--kld-api-server-url=http://${kldServerIp}:7001`,
+    `--kldr-endpoint=${kldCfg.kldrEndpoint}`,
+    `--kld-endpoint=http://${kldServerIp}:7001`,
     `--cess-node-address=${config.node.chainWsUrl}`,
+    `--controller-wallet-seed=${kldCfg.controllerPhrase}`,
+    `--stash-wallet-address=${kldCfg.stashAccount}`
   ];
   let sgxVolumeMappings = [`${kaleidoHomePath}/key:/kaleido`];
   let agentVolumeMappings = [...sgxVolumeMappings];
-  if (config.node.externalIp) {
-    agentCmds.push(`--ext-address=/ip4/${config.node.externalIp}/tcp/10010`);
-  }
-  if (kldCfg.bootPeerIds) {
-    agentCmds.push(`--boot-peer-ids=${kldCfg.bootPeerIds}`);
-  }
-  if (kldCfg.bootDnsaddr) {
-    agentCmds.push(`--boot-dnsaddr=${kldCfg.bootDnsaddr}`);
-  }
   if (kldCfg.allowLogCollection) {
     agentCmds.push("--allow-log-transport=1");
     agentVolumeMappings.push("/var/lib/docker/containers:/logs");
@@ -34,13 +27,13 @@ async function genKaleidoComposeConfigs(config, _) {
       container_name: "kld-sgx",
       restart: "always",
       devices: ["/dev/sgx_enclave", "/dev/sgx_provision"],
-      ports: [`${kldCfg.kldPort}:4001`],
+      expose: [7001],
       environment: [
-        "RUST_LOG=debug,netlink_proto=info,libp2p_ping=info,multistream_select=info,libp2p_kad=info,yamux=info,libp2p_tcp=info,libp2p_dns=info,libp2p_swarm=info,rustls=info,h2=info",
+        "RUST_LOG=debug",
         "RUST_BACKTRACE=full",
         `CTRL_WALLET_SEED=${kldCfg.controllerPhrase}`,
-        `STAS_WALLET_ADDR=${kldCfg.stashAccount}`,
-        `LISTEN_ADDRESS=/ip4/${kldServerIp}/tcp/4001`,
+        `CESS_NODE_ADDRESS=${config.node.chainWsUrl}`,
+        `PODR2_MAX_THREAD=${kldCfg.podr2MaxThreads}`
       ],
       networks: {
         kaleido: {
@@ -62,10 +55,10 @@ async function genKaleidoComposeConfigs(config, _) {
       )}`,
       container_name: "kld-agent",
       restart: "always",
-      ports: [`${kldCfg.rotPort}:10010`],
+      ports: [`${kldCfg.listenerPort}:10010`],
       command: agentCmds,
       environment: [
-        "RUST_LOG=debug,netlink_proto=info,libp2p_ping=info,multistream_select=info,libp2p_kad=info,yamux=info,libp2p_tcp=info,libp2p_dns=info,libp2p_swarm=info,rustls=info,h2=info",
+        "RUST_LOG=debug",
         "RUST_BACKTRACE=full",
       ],
       networks: {
