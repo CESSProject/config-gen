@@ -12,7 +12,7 @@ async function genKaleidoComposeConfigs(config, _) {
     `--kld-endpoint=http://${kldServerIp}:7001`,
     `--cess-node-address=${config.node.chainWsUrl}`,
     `--controller-wallet-seed=${kldCfg.controllerPhrase}`,
-    `--stash-wallet-address=${kldCfg.stashAccount}`
+    `--stash-wallet-address=${kldCfg.stashAccount}`,
   ];
   let sgxVolumeMappings = [`${kaleidoHomePath}/key:/kaleido`];
   let agentVolumeMappings = [...sgxVolumeMappings];
@@ -28,12 +28,14 @@ async function genKaleidoComposeConfigs(config, _) {
       restart: "always",
       devices: ["/dev/sgx_enclave", "/dev/sgx_provision"],
       expose: [7001],
+      ports: [`${kldCfg.p2pPort}:4001`],
       environment: [
         "RUST_LOG=debug",
         "RUST_BACKTRACE=full",
         `CTRL_WALLET_SEED=${kldCfg.controllerPhrase}`,
         `CESS_NODE_ADDRESS=${config.node.chainWsUrl}`,
-        `PODR2_MAX_THREAD=${kldCfg.podr2MaxThreads}`
+        `PODR2_MAX_THREAD=${kldCfg.podr2MaxThreads}`,
+        `LISTEN_ADDRESS=/ip4/${kldServerIp}/tcp/4001`,
       ],
       networks: {
         kaleido: {
@@ -55,12 +57,9 @@ async function genKaleidoComposeConfigs(config, _) {
       )}`,
       container_name: "kld-agent",
       restart: "always",
-      ports: [`${kldCfg.listenerPort}:10010`],
+      ports: [`${kldCfg.apiPort}:10010`],
       command: agentCmds,
-      environment: [
-        "RUST_LOG=debug",
-        "RUST_BACKTRACE=full",
-      ],
+      environment: ["RUST_LOG=debug", "RUST_BACKTRACE=full"],
       networks: {
         kaleido: {
           ipv4_address: rotServerIp,
