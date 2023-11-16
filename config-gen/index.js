@@ -81,7 +81,7 @@ async function genComposeConfig(config) {
     if (!serviceCfg["container_name"]) {
       serviceCfg["container_name"] = name;
     }
-    if (serviceCfg.networks && serviceCfg.networks["kaleido"]) {
+    if (serviceCfg.networks && serviceCfg.networks.indexOf("kaleido") != -1) {
       hasKaleidoNetwork = true;
     }
     return {
@@ -111,24 +111,14 @@ async function genComposeConfig(config) {
       kaleido: {
         name: "kaleido",
         driver: "bridge",
-        ipam: {
-          config: [
-            {
-              subnet: "172.18.0.0/16",
-            },
-          ],
-        },
       },
     };
     let chain = output["services"]?.chain;
     if (chain) {
       const chainPort = config.chain.port;
       delete chain.network_mode;
-      chain["networks"] = {
-        kaleido: {
-          ipv4_address: "172.18.0.9",
-        },
-      };
+      chain["hostname"] = "cess-chain";
+      chain["networks"] = ["kaleido"]
       chain["ports"] = ["9933:9933", "9944:9944", `${chainPort}:${chainPort}`];
       let chainCmd = chain.command;
       if (Array.isArray(chainCmd)) {
