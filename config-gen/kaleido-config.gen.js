@@ -5,11 +5,11 @@ const kaleidoHomePath = "/opt/cess/authority/kaleido";
 
 async function genKaleidoComposeConfigs(config, _) {
   const kldCfg = config.kaleido;
-  const kldServerIp = "172.18.0.3";
-  const rotServerIp = "172.18.0.4";
+  const kldHostname = "kld-sgx";
+  const rotHostname = "kld-agent";
   let agentCmds = [
     `--kldr-endpoint=${kldCfg.kldrEndpoint}`,
-    `--kld-endpoint=http://${kldServerIp}:7001`,
+    `--kld-endpoint=http://${kldHostname}:7001`,
     `--cess-node-address=${config.node.chainWsUrl}`,
     `--controller-wallet-seed=${kldCfg.controllerPhrase}`,
     `--stash-wallet-address=${kldCfg.stashAccount}`,
@@ -24,7 +24,8 @@ async function genKaleidoComposeConfigs(config, _) {
   return [
     {
       image: `cesslab/kaleido:${imageTagByProfile(config.node.profile)}`,
-      container_name: "kld-sgx",
+      container_name: kldHostname,
+      hostname: kldHostname,
       restart: "always",
       devices: ["/dev/sgx_enclave", "/dev/sgx_provision"],
       expose: [7001],
@@ -35,13 +36,8 @@ async function genKaleidoComposeConfigs(config, _) {
         `CTRL_WALLET_SEED=${kldCfg.controllerPhrase}`,
         `CESS_NODE_ADDRESS=${config.node.chainWsUrl}`,
         `PODR2_MAX_THREAD=${kldCfg.podr2MaxThreads}`,
-        `LISTEN_ADDRESS=/ip4/${kldServerIp}/tcp/4001`,
       ],
-      networks: {
-        kaleido: {
-          ipv4_address: kldServerIp,
-        },
-      },
+      networks: ["kaleido"],
       volumes: sgxVolumeMappings,
       logging: {
         driver: "json-file",
@@ -55,16 +51,13 @@ async function genKaleidoComposeConfigs(config, _) {
       image: `cesslab/kaleido-rotator:${imageTagByProfile(
         config.node.profile
       )}`,
-      container_name: "kld-agent",
+      container_name: rotHostname,
+      hostname: rotHostname,
       restart: "always",
       ports: [`${kldCfg.apiPort}:10010`],
       command: agentCmds,
       environment: ["RUST_LOG=debug", "RUST_BACKTRACE=full"],
-      networks: {
-        kaleido: {
-          ipv4_address: rotServerIp,
-        },
-      },
+      networks: ["kaleido"],
       extra_hosts: ["host.docker.internal:host-gateway"],
       volumes: agentVolumeMappings,
       depends_on: ["kld-sgx"],
