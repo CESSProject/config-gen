@@ -36,7 +36,6 @@ async function genKaleidoComposeConfigs(config, _) {
         `CTRL_WALLET_SEED=${kldCfg.controllerPhrase}`,
         `CESS_NODE_ADDRESS=${config.node.chainWsUrl}`,
         `PODR2_MAX_THREAD=${kldCfg.podr2MaxThreads}`,
-        `LISTEN_ADDRESS=/ip4/${kldHostname}/tcp/4001`,  //FIXME: the libp2p's listener address must be a resolved IP rather than a hostname
       ],
       networks: ["kaleido"],
       volumes: sgxVolumeMappings,
