@@ -13,6 +13,7 @@ async function genKaleidoComposeConfigs(config, _) {
     `--cess-node-address=${config.node.chainWsUrl}`,
     `--controller-wallet-seed=${kldCfg.controllerPhrase}`,
     `--stash-wallet-address=${kldCfg.stashAccount}`,
+    `--tee-type=${kldCfg.teeType}`
   ];
   let sgxVolumeMappings = [`${kaleidoHomePath}/key:/kaleido`];
   let agentVolumeMappings = [...sgxVolumeMappings];

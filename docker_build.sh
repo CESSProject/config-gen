@@ -7,13 +7,15 @@ usage() {
     echo "Options:"
     echo "     -p publish image"
     echo "     -n network profile, options: devnet, testnet, mainnet"
+    echo "     -x use http proxy"
 	exit 1;
 }
 
 PUBLISH=0
 NETWORK="devnet"
+PROXY=0
 
-while getopts ":hpn:" opt; do
+while getopts ":n:hpx" opt; do
     case ${opt} in
         h )
 			usage
@@ -24,12 +26,16 @@ while getopts ":hpn:" opt; do
         n )
             NETWORK=${OPTARG}
             ;;
+        x )
+            PROXY=1
+            ;;
         \? )
             echo "Invalid Option: -$OPTARG" 1>&2
             exit 1
             ;;
     esac
 done
+
 
 DOCKER_FILE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 CTX_DIR=$DOCKER_FILE_DIR
@@ -40,8 +46,12 @@ else
     echo "invalid network option, use 'devnet' instead"
     IMAGEID="$IMAGEID:devnet"
 fi
+if [ $PROXY -eq 1 ]; then
+    docker build -t $IMAGEID -f $DOCKER_FILE_DIR/Dockerfile --build-arg http_proxy=$http_proxy --build-arg https_proxy=$https_proxy $CTX_DIR
+else
+    docker build -t $IMAGEID -f $DOCKER_FILE_DIR/Dockerfile $CTX_DIR
+fi
 
-docker build -t $IMAGEID -f $DOCKER_FILE_DIR/Dockerfile $CTX_DIR
 if [ $? -ne "0" ]; then
     echo "$IMAGEID build failed!"
     exit 1

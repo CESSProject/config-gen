@@ -7,6 +7,7 @@ const kaleidoSchema = Joi.object({
   podr2MaxThreads: Joi.number().default(8),
   stashAccount: Joi.string().required(),
   controllerPhrase: Joi.string().required(),
+  teeType: Joi.string().required(),
   workDir: Joi.string().optional(),
   allowLogCollection: Joi.boolean().optional(),
 });
