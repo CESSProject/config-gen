@@ -9,6 +9,8 @@ const bucketSchema = Joi.object({
   bootAddr: Joi.string().optional(),
   useCpuCores: Joi.number().default(0),
   extraCmdArgs: Joi.string(),
+  stakerAccount: Joi.string().optional(),
+  reservedTws: Joi.array().optional()
 })
 
 module.exports = {
