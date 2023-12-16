@@ -41,8 +41,6 @@ async function genChainComposeConfig(config) {
     '--name',
     `${config.chain.name}`,
     '--rpc-port',
-    '9933',
-    '--ws-port',
     '9944',
     '--execution',
     'WASM',
@@ -58,7 +56,7 @@ async function genChainComposeConfig(config) {
     args.push('--validator', '--pruning', 'archive')
   }
   else if (config.node.mode == "watcher") {
-    args.push('--pruning', `${config.chain.pruning}`, '--ws-max-connections', '5000', '--ws-external', '--rpc-external', '--rpc-cors', 'all');
+    args.push('--pruning', `${config.chain.pruning}`, '--rpc-max-connections', '2000', '--rpc-external', '--rpc-cors', 'all');
   }
 
   if (config.chain.extraCmdArgs) {
