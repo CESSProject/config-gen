@@ -5,8 +5,9 @@ const kaleidoSchema = Joi.object({
   apiPort: Joi.number().port().default(10010),
   p2pPort: Joi.number().port().default(4001),
   podr2MaxThreads: Joi.number().default(8),
-  stashAccount: Joi.string().required(),
+  stashAccount: Joi.string().optional(),
   controllerPhrase: Joi.string().required(),
+  teeType: Joi.string().required(),
   workDir: Joi.string().optional(),
   allowLogCollection: Joi.boolean().optional(),
 });
