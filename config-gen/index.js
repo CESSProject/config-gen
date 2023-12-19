@@ -122,7 +122,7 @@ async function genComposeConfig(config) {
       chain["ports"] = ["9933:9933", "9944:9944", `${chainPort}:${chainPort}`];
       let chainCmd = chain.command;
       if (Array.isArray(chainCmd)) {
-        chainCmd.push("--unsafe-ws-external", "--rpc-cors", "all");
+        chainCmd.push("--unsafe-rpc-external", "--rpc-cors", "all");
       }
     }
   }
