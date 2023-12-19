@@ -12,8 +12,11 @@ async function genKaleidoComposeConfigs(config, _) {
     `--kld-endpoint=http://${kldHostname}:7001`,
     `--cess-node-address=${config.node.chainWsUrl}`,
     `--controller-wallet-seed=${kldCfg.controllerPhrase}`,
-    `--stash-wallet-address=${kldCfg.stashAccount}`,
+    `--tee-type=${kldCfg.teeType}`
   ];
+  if (kldCfg.stashAccount){
+    agentCmds.push(`--stash-wallet-address=${kldCfg.stashAccount}`)
+  }
   let sgxVolumeMappings = [`${kaleidoHomePath}/key:/kaleido`];
   let agentVolumeMappings = [...sgxVolumeMappings];
   if (kldCfg.allowLogCollection) {

@@ -4,6 +4,7 @@ const { nodeSchema } = require('./node.schema')
 const { chainSchema } = require('./chain.schema')
 const { bucketSchema } = require('./bucket.schema')
 const { kaleidoSchema } = require('./kaleido.schema')
+const { nginxSchema } = require('./nginx.schema')
 
 function getConfigSchema(config) {
   let sMap = {
@@ -13,6 +14,7 @@ function getConfigSchema(config) {
   if (config.node.mode == "authority") {
     sMap["chain"] = chainSchema.required()
     sMap["kaleido"] = kaleidoSchema.required()
+    sMap["nginx"] = nginxSchema.optional()
   }
   else if (config.node.mode == "storage") {
     sMap["chain"] = chainSchema.required()

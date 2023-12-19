@@ -9,6 +9,7 @@ const {
   genBucketComposeConfig,
 } = require("./bucket-config.gen");
 const { genKaleidoComposeConfigs } = require("./kaleido-config.gen");
+const { genNginxComposeConfigs } = require("./nginx-config.gen");
 const { genWatchtowerComposeConfig } = require("./watchtower-config.gen");
 const { logger } = require("../logger");
 
@@ -41,6 +42,10 @@ const configGenerators = [
   {
     name: "kaleido",
     composeFunc: genKaleidoComposeConfigs,
+  },
+  {
+    name: "nginx",
+    composeFunc: genNginxComposeConfigs,
   },
   {
     name: "watchtower",

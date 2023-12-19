@@ -30,6 +30,10 @@ bucket:
 kaleido:
   kldPort: 4001
   rotPort: 10010
+  teeType: Full
   stashAccount: "cXh9q6D97jZ4XH31SMAGSUNVNsTzg5hThuhoawQFj2szbvsQD"
   controllerPhrase: "worth swallow between garage novel repair february panther million report hip token"
 
+nginx:
+  confPath: "/opt/cess/authority/proxy/conf"
+  logPath: "/opt/cess/authority/proxy/log"
