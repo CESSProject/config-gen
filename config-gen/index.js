@@ -124,7 +124,7 @@ async function genComposeConfig(config) {
       delete chain.network_mode;
       chain["hostname"] = "cess-chain";
       chain["networks"] = ["kaleido"]
-      chain["ports"] = ["9933:9933", "9944:9944", `${chainPort}:${chainPort}`];
+      chain["ports"] = ["9944:9944", `${chainPort}:${chainPort}`];
       let chainCmd = chain.command;
       if (Array.isArray(chainCmd)) {
         chainCmd.push("--unsafe-rpc-external", "--rpc-cors", "all");
