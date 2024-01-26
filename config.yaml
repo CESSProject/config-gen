@@ -26,13 +26,12 @@ bucket:
   bootAddr: "_dnsaddr.bootstrap-kldr.cess.cloud"
   extraCmdArgs: " -bb  ss --sfew 3"
 
-## kaleido configurations
-kaleido:
-  kldPort: 4001
-  rotPort: 10010
-  teeType: Full
-  stashAccount: "cXh9q6D97jZ4XH31SMAGSUNVNsTzg5hThuhoawQFj2szbvsQD"
-  controllerPhrase: "worth swallow between garage novel repair february panther million report hip token"
+## ceseal configurations
+ceseal:
+  endpointOnChain: "http://abc.com:19999"
+  publicPort: 19999
+  role: Full
+  mnemonic: "worth swallow between garage novel repair february panther million report hip token"
 
 nginx:
   confPath: "/opt/cess/authority/proxy/conf"

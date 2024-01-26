@@ -11,7 +11,7 @@ async function genNginxComposeConfigs(config, _) {
         restart: "always",
         expose: [80],
         ports: [`80:80`],
-        networks: ["kaleido"],
+        networks: ["ceseal"],
         volumes: nginxVolumeMappings,
         logging: {
             driver: "json-file",
