@@ -8,7 +8,7 @@ const {
   genBucketConfig,
   genBucketComposeConfig,
 } = require("./bucket-config.gen");
-const { genKaleidoComposeConfigs } = require("./kaleido-config.gen");
+const { genCesealComposeConfigs } = require("./ceseal-config.gen");
 const { genNginxComposeConfigs } = require("./nginx-config.gen");
 const { genWatchtowerComposeConfig } = require("./watchtower-config.gen");
 const { logger } = require("../logger");
@@ -40,8 +40,8 @@ const configGenerators = [
     composeFunc: genBucketComposeConfig,
   },
   {
-    name: "kaleido",
-    composeFunc: genKaleidoComposeConfigs,
+    name: "ceseal",
+    composeFunc: genCesealComposeConfigs,
   },
   {
     name: "nginx",
@@ -81,13 +81,13 @@ async function genComposeConfig(config) {
     services: {},
   };
 
-  var hasKaleidoNetwork = false;
+  var hasCesealNetwork = false;
   let buildComposeService = function (serviceCfg, name, struct) {
     if (!serviceCfg["container_name"]) {
       serviceCfg["container_name"] = name;
     }
-    if (serviceCfg.networks && serviceCfg.networks.indexOf("kaleido") != -1) {
-      hasKaleidoNetwork = true;
+    if (serviceCfg.networks && serviceCfg.networks.indexOf("ceseal") != -1) {
+      hasCesealNetwork = true;
     }
     return {
       ...struct,
@@ -111,10 +111,10 @@ async function genComposeConfig(config) {
       output = buildComposeService(serviceCfg, cg.name, output);
     }
   }
-  if (hasKaleidoNetwork) {
+  if (hasCesealNetwork) {
     output["networks"] = {
-      kaleido: {
-        name: "kaleido",
+      ceseal: {
+        name: "ceseal",
         driver: "bridge",
       },
     };
@@ -123,7 +123,7 @@ async function genComposeConfig(config) {
       const chainPort = config.chain.port;
       delete chain.network_mode;
       chain["hostname"] = "cess-chain";
-      chain["networks"] = ["kaleido"]
+      chain["networks"] = ["ceseal"]
       chain["ports"] = ["9944:9944", `${chainPort}:${chainPort}`];
       let chainCmd = chain.command;
       if (Array.isArray(chainCmd)) {

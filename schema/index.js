@@ -3,7 +3,7 @@ const Joi = require('joi')
 const { nodeSchema } = require('./node.schema')
 const { chainSchema } = require('./chain.schema')
 const { bucketSchema } = require('./bucket.schema')
-const { kaleidoSchema } = require('./kaleido.schema')
+const { cesealSchema } = require('./ceseal.schema')
 const { nginxSchema } = require('./nginx.schema')
 
 function getConfigSchema(config) {
@@ -13,7 +13,7 @@ function getConfigSchema(config) {
 
   if (config.node.mode == "authority") {
     sMap["chain"] = chainSchema.required()
-    sMap["kaleido"] = kaleidoSchema.required()
+    sMap["ceseal"] = cesealSchema.required()
     sMap["nginx"] = nginxSchema.optional()
   }
   else if (config.node.mode == "storage") {

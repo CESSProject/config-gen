@@ -31,7 +31,6 @@ async function genChainComposeConfig(config) {
     }
   }
   let args = [
-    './cess-node',
     '--base-path',
     '/opt/cess/data',
     '--chain',
