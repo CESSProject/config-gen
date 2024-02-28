@@ -12,12 +12,12 @@ function getConfigSchema(config) {
   }
 
   if (config.node.mode == "authority") {
-    sMap["chain"] = chainSchema.required()
+    sMap["chain"] = chainSchema.optional()
     sMap["ceseal"] = cesealSchema.required()
     sMap["nginx"] = nginxSchema.optional()
   }
   else if (config.node.mode == "storage") {
-    sMap["chain"] = chainSchema.required()
+    sMap["chain"] = chainSchema.optional();
     sMap["bucket"] = bucketSchema.required()
   }
   else if (config.node.mode == "watcher") {

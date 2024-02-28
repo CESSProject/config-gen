@@ -1,14 +1,17 @@
-const { imageTagByProfile } = require("../utils");
-const { logger } = require("../logger");
+const { imageTagByProfile, chainHostName } = require("../utils");
 
 const cesealHomePath = "/opt/cess/authority/ceseal";
 
 async function genCesealComposeConfigs(config, _) {
   const specCfg = config.ceseal;
+  let chainWsUrl = specCfg.chainWsUrl;
+  if (!config.node.externalChain && chainWsUrl.indexOf(chainHostName) == -1) {
+    chainWsUrl = `ws://${chainHostName}:9944`
+  }
   const cesealHostname = "ceseal";
   const cifrostHostname = "cifrost";
   let cesealCmds = [
-    "--chain-ws-endpoint", `ws://cess-chain:9944`,
+    "--chain-ws-endpoint", `${chainWsUrl}`,
     "--internal-endpoint", `http://ceseal:8000`,
     "--attestation-provider", "ias",
     "--public-endpoint", `${specCfg.endpointOnChain}`,

@@ -2,11 +2,9 @@
 node:
   ## the mode of node: authority/storage/watcher
   mode: "authority"
-  externalIp: "127.0.0.1"
-  domainName: ""
-  chainWsUrl: "ws://127.0.0.1:9944"
   ## the profile of node: devnet/testnet/mainnet
   profile: "devnet"
+  externalChain: 0
 
 ## chain configurations
 chain:
@@ -18,6 +16,8 @@ chain:
 
 ## bucket configurations
 bucket:
+  chainWsUrl: "ws://127.0.0.1:9944"
+  backupChainWsUrls: []
   port: 15001
   space: 300
   incomeAccount: "abc"
@@ -28,6 +28,7 @@ bucket:
 
 ## ceseal configurations
 ceseal:
+  chainWsUrl: "ws://127.0.0.1:9944"
   endpointOnChain: "http://abc.com:19999"
   publicPort: 19999
   role: Full

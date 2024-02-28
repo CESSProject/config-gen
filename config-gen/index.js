@@ -2,7 +2,7 @@
  * config generators
  */
 const path = require("path");
-const { writeConfig } = require("../utils");
+const { writeConfig, chainHostName } = require("../utils");
 const { genChainConfig, genChainComposeConfig } = require("./chain-config.gen");
 const {
   genBucketConfig,
@@ -74,6 +74,9 @@ async function genConfig(config, outputOpts) {
 }
 
 async function genComposeConfig(config) {
+  if (!config.node.externalChain && !config.chain) {
+    throw new Error("Set to use local chain but without corresponding configuration");
+  }
   // docker compose config generation
   let output = {
     version: "3",
@@ -102,6 +105,9 @@ async function genComposeConfig(config) {
     if (!(config[cg.name] || cg.name === "watchtower")) {
       continue;
     }
+    if (config.node.externalChain && cg.name === "chain" && config.node.mode != "watcher") {  //Watcher mode is not affected by 'node.externalChain'
+      continue;
+    }
     const serviceCfg = await cg.composeFunc(config);
     if (Array.isArray(serviceCfg)) {
       serviceCfg.forEach(
@@ -122,7 +128,7 @@ async function genComposeConfig(config) {
     if (chain) {
       const chainPort = config.chain.port;
       delete chain.network_mode;
-      chain["hostname"] = "cess-chain";
+      chain["hostname"] = chainHostName;
       chain["networks"] = ["ceseal"]
       chain["ports"] = ["9944:9944", `${chainPort}:${chainPort}`];
       let chainCmd = chain.command;

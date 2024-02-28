@@ -1,6 +1,8 @@
 const Joi = require('joi')
 
 const bucketSchema = Joi.object({
+  chainWsUrl: Joi.string().optional(),
+  backupChainWsUrls: Joi.array().optional(),
   incomeAccount: Joi.string().required(),
   signPhrase: Joi.string().required(),
   port: Joi.number().port().default(15001),
