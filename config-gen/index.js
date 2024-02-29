@@ -74,13 +74,15 @@ async function genConfig(config, outputOpts) {
 }
 
 async function genComposeConfig(config) {
-  if (!config.node.externalChain && !config.chain) {
+  const mode = config.node.mode;
+  const isExternalChain = config.node.externalChain;
+  if (!isExternalChain && !config.chain) {
     throw new Error("Set to use local chain but without corresponding configuration");
   }
   // docker compose config generation
   let output = {
     version: "3",
-    name: `cess-${config.node.mode}`,
+    name: `cess-${mode}`,
     services: {},
   };
 
@@ -105,7 +107,7 @@ async function genComposeConfig(config) {
     if (!(config[cg.name] || cg.name === "watchtower")) {
       continue;
     }
-    if (config.node.externalChain && cg.name === "chain" && config.node.mode != "watcher") {  //Watcher mode is not affected by 'node.externalChain'
+    if (isExternalChain && cg.name === "chain" && !(mode == "watcher" || mode == "rpcnode")) {  //RPC-Node mode is not affected by 'node.externalChain'
       continue;
     }
     const serviceCfg = await cg.composeFunc(config);
