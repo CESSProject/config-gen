@@ -2,7 +2,7 @@ const Joi = require('joi')
 
 const nodeSchema = Joi.object({
   mode: Joi.string().valid('authority', 'storage', 'rpcnode', 'watcher').required(),  //watcher will deprecated
-  chainWsUrl: Joi.string().optional(),  //deprecated
+  chainWsUrl: Joi.string().allow("").optional(),  //deprecated
   backupChainWsUrls: Joi.array().optional(),  //deprecated  
   region: Joi.string().default("en"),
   profile: Joi.string().valid('devnet', 'testnet', 'mainnet').default("testnet"),
