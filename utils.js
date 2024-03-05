@@ -3,6 +3,8 @@ const shell = require('shelljs')
 const yaml = require('js-yaml')
 const toml = require('@iarna/toml')
 
+const chainHostName = "cess-chain"
+
 async function createDir(dir) {
   if(shell.mkdir('-p', dir).code !== 0) {
     throw `failed to create directory: ${dir}`
@@ -50,4 +52,5 @@ module.exports = {
   writeYaml,
   writeToml,
   imageTagByProfile,
+  chainHostName,
 }

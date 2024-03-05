@@ -1,10 +1,25 @@
 const { imageTagByProfile } = require('../utils')
 const bucketHomePath = "/opt/cess/storage/bucket"
 
+function ensureChainWsUrls(config) {
+  // TODO: For compatibility, keep the deprecated node.chainWsUrl and node.backupChainWsUrls
+  const chainWsUrl = config.bucket.chainWsUrl || config.node.chainWsUrl;
+  const backupChainWsUrls = config.bucket.backupChainWsUrls || config.node.backupChainWsUrls || [];
+  let urls;
+  if (!chainWsUrl) {
+    urls = backupChainWsUrls;
+  } else {
+    urls = [chainWsUrl, ...backupChainWsUrls];
+  }
+  if (!urls) {
+    throw new Error("The chain ws-url must be set to at least one");
+  }
+  return urls;
+}
+
 async function genBucketConfig(config) {
-  const chainWsUrls = [config.node.chainWsUrl, ...(config.node.backupChainWsUrls || [])];
   const apiConfig = {
-    Rpc: chainWsUrls,
+    Rpc: ensureChainWsUrls(config),
     Port: config.bucket.port,
     Boot: [config.bucket.bootAddr || process.env["BUKET_BOOT"] || "_dnsaddr.bootstrap-kldr.cess.cloud"],
     Mnemonic: config.bucket.signPhrase,
@@ -27,13 +42,13 @@ async function genBucketConfig(config) {
 async function genBucketComposeConfig(config) {
   let args = [
     "run",
-    "-c", 
+    "-c",
     "/opt/bucket/config.yaml",
   ]
   if (config.bucket.extraCmdArgs) {
     const extraCmdArgs = config.bucket.extraCmdArgs.split(' ').map(e => e.trim()).filter(e => e !== '');
     args.push(...extraCmdArgs);
-  }  
+  }
   return {
     image: 'cesslab/cess-bucket:' + imageTagByProfile(config.node.profile),
     network_mode: 'host',
