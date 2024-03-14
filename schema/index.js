@@ -2,6 +2,7 @@
 const Joi = require('joi')
 const { nodeSchema } = require('./node.schema')
 const { chainSchema } = require('./chain.schema')
+const { bucketsSchema } = require('./buckets.schema')
 const { bucketSchema } = require('./bucket.schema')
 const { cesealSchema } = require('./ceseal.schema')
 const { nginxSchema } = require('./nginx.schema')
@@ -19,7 +20,11 @@ function getConfigSchema(config) {
   }
   else if (mode == "storage") {
     sMap["chain"] = chainSchema.optional();
-    sMap["bucket"] = bucketSchema.required()
+    sMap["bucket"] = bucketSchema.required();
+  }
+  else if (mode == "multibucket") {
+    sMap["rpcnode"] = chainSchema.required();
+    sMap["buckets"] = bucketsSchema.required()
   }
   else if (mode == "watcher" || mode == "rpcnode") {
     sMap["chain"] = chainSchema.required()
