@@ -23,7 +23,7 @@ function getConfigSchema(config) {
     sMap["bucket"] = bucketSchema.required();
   }
   else if (mode == "multibucket") {
-    sMap["rpcnode"] = chainSchema.required();
+    sMap["chain"] = chainSchema.required();
     sMap["buckets"] = bucketsSchema.required()
   }
   else if (mode == "watcher" || mode == "rpcnode") {

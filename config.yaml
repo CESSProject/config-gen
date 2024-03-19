@@ -4,16 +4,16 @@ node:
   mode: "multibucket"
   ## the profile of node: devnet/testnet/mainnet
   profile: "testnet"
-  # default chain/rpcnode url for bucket
+  # default chain url for bucket
   chainWsUrl: ""
-  # default backup chain/rpcnode urls for bucket
+  # default backup chain urls for bucket
   backupChainWsUrls: []
 
-## chain/rpcnode configurations
-rpcnode:
-  ## the name of chain/rpcnode node
-  name: "cess-rpcnode"
-  ## the port of chain/rpcnode node
+## chain configurations
+chain:
+  ## the name of chain node
+  name: "cess-chain"
+  ## the port of chain node
   port: 30336
   rpcPort: 9044
 
@@ -50,8 +50,8 @@ buckets:
     # a directory mount with filesystem
     diskPath: "/mnt/cess_storage1"
     # The rpc endpoint of the chain node
-    rpcNodeWsUrl: "ws://127.0.0.1:9944/"
-    backupRpcNodeWsUrls: []
+    chainWsUrl: "ws://127.0.0.1:9944/"
+    backupChainWsUrls: []
     # Priority tee list address
     TeeList:
       - "127.0.0.1:8080"
@@ -78,8 +78,8 @@ buckets:
     # a directory mount with filesystem
     diskPath: "/mnt/cess_storage2"
     # The rpc endpoint of the chain node
-    rpcNodeWsUrl: "ws://127.0.0.1:9944/"
-    backupRpcNodeWsUrls: []
+    chainWsUrl: "ws://127.0.0.1:9944/"
+    backupChainWsUrls: []
     # Priority tee list address
     TeeList:
       - "127.0.0.1:8080"

@@ -1,10 +1,10 @@
 const {imageTagByProfile} = require('../utils')
 const bucketsHomePath = "/opt/cess/storage/buckets"
 
-function ensureRpcNodeWsUrlsInMultibucketMode(config, index) {
+function ensureChainWsUrlsInMultibucketMode(config, index) {
   // TODO: For compatibility, keep the deprecated node.chainWsUrl and node.backupChainWsUrls
-  const chainWsUrl = config.buckets[index].rpcNodeWsUrl || config.node.chainWsUrl;
-  const backupChainWsUrls = config.buckets[index].backupRpcNodeWsUrls || config.node.backupChainWsUrls || [];
+  const chainWsUrl = config.buckets[index].chainWsUrl || config.node.chainWsUrl;
+  const backupChainWsUrls = config.buckets[index].backupChainWsUrls || config.node.backupChainWsUrls || [];
   let urls;
   if (!chainWsUrl) {
     urls = backupChainWsUrls;
@@ -12,7 +12,7 @@ function ensureRpcNodeWsUrlsInMultibucketMode(config, index) {
     urls = [chainWsUrl, ...backupChainWsUrls];
   }
   if (!urls) {
-    throw new Error("The rpcnode ws-url must be set to at least one");
+    throw new Error("The chain ws-url must be set to at least one");
   }
   return urls;
 }
@@ -27,7 +27,7 @@ async function genBucketsConfig(config) {
       EarningsAcc: config.buckets[i].earningsAcc || config.buckets[i].incomeAccount,
       StakingAcc: config.buckets[i].stakingAcc || config.buckets[i].stakerAccount || null,
       Mnemonic: config.buckets[i].mnemonic || config.buckets[i].signPhrase,
-      Rpc: ensureRpcNodeWsUrlsInMultibucketMode(config, i),
+      Rpc: ensureChainWsUrlsInMultibucketMode(config, i),
       UseSpace: config.buckets[i].UseSpace || 300,
       Workspace: "/opt/bucket-disk",
       UseCpu: config.buckets[i].UseCpu || 0,

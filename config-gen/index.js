@@ -4,11 +4,7 @@
 const path = require("path");
 const { writeConfig, chainHostName } = require("../utils");
 const { genChainConfig, genChainComposeConfig } = require("./chain-config.gen");
-const { genRpcNodeConfig, genRpcNodeComposeConfig } = require("./rpcnode-config.gen");
-const {
-  genBucketConfig,
-  genBucketComposeConfig,
-} = require("./bucket-config.gen");
+const { genBucketConfig, genBucketComposeConfig } = require("./bucket-config.gen");
 const { genBucketsConfig, genBucketsComposeConfig } = require("./buckets-config.gen");
 const { genCesealComposeConfigs } = require("./ceseal-config.gen");
 const { genNginxComposeConfigs } = require("./nginx-config.gen");
@@ -29,18 +25,11 @@ const { logger } = require("../logger");
  * return the service definition for this generator
  */
 const configGenerators = [
-  // chain configGenerators will be replaced with rpcnode
   {
     name: "chain",
     configFunc: genChainConfig,
     to: path.join("chain", "config.json"),
     composeFunc: genChainComposeConfig,
-  },
-  {
-    name: "rpcnode",
-    configFunc: genRpcNodeConfig,
-    to: path.join("rpcnode", "config.json"),
-    composeFunc: genRpcNodeComposeConfig,
   },
   {
     name: "buckets",
@@ -91,7 +80,7 @@ async function genConfig(config, outputOpts) {
 async function genComposeConfig(config) {
   const mode = config.node.mode;
   const isExternalChain = config.node.externalChain;
-  if (!isExternalChain && !config.chain && !config.rpcnode) {
+  if (!isExternalChain && !config.chain) {
     throw new Error("Set to use local chain but without corresponding configuration");
   }
   // docker compose config generation
