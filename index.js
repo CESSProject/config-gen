@@ -51,8 +51,8 @@ async function main(){
         configFile = args[0];
       }
     }
-    
-    await loadConfig(configFile);    
+
+    await loadConfig(configFile);
   } catch(e) {
     logger.error('failed to load config: %o', e.message);
     console.trace(e);

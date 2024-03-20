@@ -1,20 +1,23 @@
 ## node configurations template
 node:
-  ## the mode of node: authority/storage/watcher
-  mode: "authority"
+  ## the mode of node: authority/storage/watcher/multibucket
+  mode: "multibucket"
   ## the profile of node: devnet/testnet/mainnet
-  profile: "devnet"
-  externalChain: 0
+  profile: "testnet"
+  # default chain url for bucket
+  chainWsUrl: ""
+  # default backup chain urls for bucket
+  backupChainWsUrls: []
 
 ## chain configurations
 chain:
   ## the name of chain node
   name: "cess-chain"
-  ## the p2p port of chain node
+  ## the port of chain node
   port: 30336
-  extraCmdArgs: "-a 333 --anfew afew"
+  rpcPort: 9044
 
-## bucket configurations
+## bucket configurations (single storage miner mode)
 bucket:
   chainWsUrl: "ws://127.0.0.1:9944"
   backupChainWsUrls: []
@@ -25,6 +28,65 @@ bucket:
   diskPath: "/disks/1"
   bootAddr: "_dnsaddr.bootstrap-kldr.cess.cloud"
   extraCmdArgs: " -bb  ss --sfew 3"
+
+## bucket configurations  (multi storage miner mode)
+buckets:
+  # P2P communication port
+#  - name: "bucket_1"
+  - port: 15001
+    # Maximum space used, the unit is GiB
+    UseSpace: 1000
+    # Number of cpu's used, 0 means use all
+    UseCpu: 2
+    # earnings account
+    earningsAcc: "cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    # Staking account
+    # If you fill in the staking account, the staking will be paid by the staking account,
+    # otherwise the staking will be paid by the signature account.
+    stakingAcc: "cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    # Signature account mnemonic
+    # each bucket's mnemonic should be different
+    mnemonic: "aaaaa bbbbb ccccc ddddd eeeee fffff ggggg hhhhh iiiii jjjjj kkkkk lllll"
+    # a directory mount with filesystem
+    diskPath: "/mnt/cess_storage1"
+    # The rpc endpoint of the chain node
+    chainWsUrl: "ws://127.0.0.1:9944/"
+    backupChainWsUrls: []
+    # Priority tee list address
+    TeeList:
+      - "127.0.0.1:8080"
+      - "127.0.0.1:8081"
+    # Bootstrap Nodes
+    Boot: "_dnsaddr.boot-bucket-testnet.cess.cloud"
+
+#  - name: "bucket_2"
+    # P2P communication port
+  - port: 15002
+    # Maximum space used, the unit is GiB
+    UseSpace: 1000
+    # Number of cpu's used
+    UseCpu: 2
+    # earnings account
+    earningsAcc: "cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    # Staking account
+    # If you fill in the staking account, the staking will be paid by the staking account,
+    # otherwise the staking will be paid by the signature account.
+    stakingAcc: "cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    # Signature account mnemonic
+    # each bucket's mnemonic should be different
+    mnemonic: "lllll kkkkk jjjjj iiiii hhhhh ggggg fffff eeeee ddddd ccccc bbbbb aaaaa"
+    # a directory mount with filesystem
+    diskPath: "/mnt/cess_storage2"
+    # The rpc endpoint of the chain node
+    chainWsUrl: "ws://127.0.0.1:9944/"
+    backupChainWsUrls: []
+    # Priority tee list address
+    TeeList:
+      - "127.0.0.1:8080"
+      - "127.0.0.1:8081"
+    # Bootstrap Nodes
+    Boot: "_dnsaddr.boot-bucket-testnet.cess.cloud"
+
 
 ## ceseal configurations
 ceseal:

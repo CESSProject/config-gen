@@ -4,10 +4,8 @@
 const path = require("path");
 const { writeConfig, chainHostName } = require("../utils");
 const { genChainConfig, genChainComposeConfig } = require("./chain-config.gen");
-const {
-  genBucketConfig,
-  genBucketComposeConfig,
-} = require("./bucket-config.gen");
+const { genBucketConfig, genBucketComposeConfig } = require("./bucket-config.gen");
+const { genBucketsConfig, genBucketsComposeConfig } = require("./buckets-config.gen");
 const { genCesealComposeConfigs } = require("./ceseal-config.gen");
 const { genNginxComposeConfigs } = require("./nginx-config.gen");
 const { genWatchtowerComposeConfig } = require("./watchtower-config.gen");
@@ -32,6 +30,12 @@ const configGenerators = [
     configFunc: genChainConfig,
     to: path.join("chain", "config.json"),
     composeFunc: genChainComposeConfig,
+  },
+  {
+    name: "buckets",
+    configFunc: genBucketsConfig,
+    to: path.join("buckets", "config.yaml"),
+    composeFunc: genBucketsComposeConfig,
   },
   {
     name: "bucket",
