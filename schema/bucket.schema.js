@@ -12,13 +12,13 @@ const bucketSchema = Joi.object({
   signPhrase: Joi.string().optional(),
   diskPath: Joi.string().required(),
   UseCpu: Joi.number().optional(),
-  UseSpace: Joi.number().optional(),
+  space: Joi.number().port().default(300),
   Boot: Joi.string().optional(),
   bootAddr: Joi.string().optional(),
   extraCmdArgs: Joi.string().optional(),
   reservedTws: Joi.array().optional(),
   TeeList: Joi.array().optional(),
-  name: Joi.string().required()
+  name: Joi.string().optional().default('bucket')
 }).xor('Boot', 'bootAddr') // there's one item and there's only one item can be true
   .xor('mnemonic', 'signPhrase')
   .xor('earningsAcc', 'incomeAccount')

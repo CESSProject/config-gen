@@ -28,7 +28,7 @@ async function genBucketsConfig(config) {
       StakingAcc: config.buckets[i].stakingAcc || config.buckets[i].stakerAccount || null,
       Mnemonic: config.buckets[i].mnemonic || config.buckets[i].signPhrase,
       Rpc: ensureChainWsUrlsInMultibucketMode(config, i),
-      UseSpace: config.buckets[i].UseSpace || 300,
+      UseSpace: config.buckets[i].UseSpace || config.buckets[i].space || 300,
       Workspace: "/opt/bucket-disk",
       UseCpu: config.buckets[i].UseCpu || 0,
       TeeList: config.buckets[i].TeeList || ["127.0.0.1:8080", "127.0.0.1:8081"],
