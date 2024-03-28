@@ -55,7 +55,7 @@ async function genChainComposeConfig(config) {
     args.push('--validator', '--pruning', 'archive')
   }
   else if (config.node.mode == "rpcnode" || config.node.mode == "watcher") {
-    args.push('--pruning', `${config.chain.pruning}`, '--rpc-max-connections', '2000', '--rpc-external', '--rpc-cors', 'all');
+    args.push('--pruning', `${config.chain.pruning}`, '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
   }
 
   if (config.chain.extraCmdArgs) {
