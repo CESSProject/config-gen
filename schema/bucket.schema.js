@@ -12,6 +12,7 @@ const bucketSchema = Joi.object({
   signPhrase: Joi.string().optional(),
   diskPath: Joi.string().required(),
   UseCpu: Joi.number().optional(),
+  UseSpace: Joi.number().optional(),
   space: Joi.number().port().default(300),
   Boot: Joi.string().optional(),
   bootAddr: Joi.string().optional(),
