@@ -73,6 +73,12 @@ async function genBucketsComposeConfig(config) {
           "max-size": "500m"
         }
       },
+      healthcheck: {
+        test: `["CMD", "nc", "-zv", "127.0.0.1", "${config.buckets[i].port}"]`,
+        interval: "1m",
+        timeout: "10s",
+        retries: 3
+      },
     }
   }
   return buckets_services
