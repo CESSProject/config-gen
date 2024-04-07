@@ -9,7 +9,9 @@ const { genBucketsConfig, genBucketsComposeConfig } = require("./buckets-config.
 const { genCesealComposeConfigs } = require("./ceseal-config.gen");
 const { genNginxComposeConfigs } = require("./nginx-config.gen");
 const { genWatchtowerComposeConfig } = require("./watchtower-config.gen");
+const { genAutoHealComposeConfig } = require("./autoheal-config.gen");
 const { logger } = require("../logger");
+const thirdPartyComponent = ["watchtower", "autoheal"]
 
 /**
  * configuration of generators to use
@@ -54,6 +56,10 @@ const configGenerators = [
   {
     name: "watchtower",
     composeFunc: genWatchtowerComposeConfig,
+  },
+  {
+    name: "autoheal",
+    composeFunc: genAutoHealComposeConfig,
   },
 ];
 
@@ -108,7 +114,7 @@ async function genComposeConfig(config) {
   };
 
   for (const cg of configGenerators) {
-    if (!(config[cg.name] || cg.name === "watchtower")) {
+    if (!(config[cg.name] || thirdPartyComponent.includes(cg.name))) {
       continue;
     }
     if (isExternalChain && cg.name === "chain" && !(mode == "watcher" || mode == "rpcnode")) {  //RPC-Node mode is not affected by 'node.externalChain'
