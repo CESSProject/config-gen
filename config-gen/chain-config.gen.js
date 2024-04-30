@@ -1,8 +1,12 @@
-const { imageTagByProfile } = require('../utils')
+const {imageTagByProfile} = require('../utils')
 const fs = require('fs-extra')
 
 function getChainHomePath(config) {
   const nodeMode = config.node.mode || "authority"
+  if ( nodeMode === "miners"){
+    // when press tab in linux, it can distinguish /opt/cess/miners and /opt/cess/minersadm
+    return "/opt/cess/data/" + nodeMode + "/chain"
+  }
   return "/opt/cess/" + nodeMode + "/chain"
 }
 
