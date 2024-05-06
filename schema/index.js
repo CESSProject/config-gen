@@ -2,8 +2,8 @@
 const Joi = require('joi')
 const { nodeSchema } = require('./node.schema')
 const { chainSchema } = require('./chain.schema')
-const { bucketsSchema } = require('./buckets.schema')
-const { bucketSchema } = require('./bucket.schema')
+const { minersSchema } = require('./miners.schema')
+const { minerSchema } = require('./miner.schema')
 const { cesealSchema } = require('./ceseal.schema')
 const { nginxSchema } = require('./nginx.schema')
 
@@ -20,11 +20,11 @@ function getConfigSchema(config) {
   }
   else if (mode == "storage") {
     sMap["chain"] = chainSchema.optional();
-    sMap["bucket"] = bucketSchema.required();
+    sMap["miner"] = minerSchema.required();
   }
-  else if (mode == "multibucket") {
+  else if (mode == "multiminer") {
     sMap["chain"] = chainSchema.required();
-    sMap["buckets"] = bucketsSchema.required()
+    sMap["miners"] = minersSchema.required()
   }
   else if (mode == "watcher" || mode == "rpcnode") {
     sMap["chain"] = chainSchema.required()

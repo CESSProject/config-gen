@@ -1,6 +1,6 @@
 const Joi = require('joi')
 
-const bucketSchema = Joi.object({
+const minerSchema = Joi.object({
   chainWsUrl: Joi.string().optional(),
   backupChainWsUrls: Joi.array().optional(),
   port: Joi.number().port().default(15001),
@@ -19,11 +19,11 @@ const bucketSchema = Joi.object({
   extraCmdArgs: Joi.string().optional(),
   reservedTws: Joi.array().optional(),
   TeeList: Joi.array().optional(),
-  name: Joi.string().optional().default('bucket')
+  name: Joi.string().optional().default('miner')
 }).xor('Boot', 'bootAddr') // there's one item and there's only one item can be true
   .xor('mnemonic', 'signPhrase')
   .xor('earningsAcc', 'incomeAccount')
 
 module.exports = {
-  bucketSchema,
+  minerSchema,
 }
