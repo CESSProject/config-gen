@@ -3,7 +3,7 @@ const fs = require('fs-extra')
 
 function getChainHomePath(config) {
   const nodeMode = config.node.mode || "authority"
-  if ( nodeMode === "miners"){
+  if (nodeMode === "multiminer") {
     // when press tab in linux, it can distinguish /opt/cess/miners and /opt/cess/minersadm
     return "/opt/cess/data/" + nodeMode + "/chain"
   }
@@ -57,8 +57,7 @@ async function genChainComposeConfig(config) {
 
   if (config.node.mode == "authority") {
     args.push('--validator', '--pruning', 'archive')
-  }
-  else if (config.node.mode == "rpcnode" || config.node.mode == "watcher") {
+  } else if (config.node.mode == "rpcnode" || config.node.mode == "watcher" || config.node.mode == "multiminer") {
     args.push('--pruning', `${config.chain.pruning}`, '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
   }
 

@@ -1,7 +1,7 @@
 ## node configurations template
 node:
-  ## the mode of node: authority/storage/watcher/miners
-  mode: "miners"
+  ## the mode of node: authority/storage/watcher/multiminer
+  mode: "multiminer"
   ## the profile of node: devnet/testnet/mainnet
   profile: "testnet"
   # default chain url for miner

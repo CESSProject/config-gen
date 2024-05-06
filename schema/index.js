@@ -22,7 +22,7 @@ function getConfigSchema(config) {
     sMap["chain"] = chainSchema.optional();
     sMap["miner"] = minerSchema.required();
   }
-  else if (mode == "miners") {
+  else if (mode == "multiminer") {
     sMap["chain"] = chainSchema.required();
     sMap["miners"] = minersSchema.required()
   }
