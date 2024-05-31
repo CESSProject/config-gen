@@ -91,7 +91,6 @@ async function genComposeConfig(config) {
   }
   // docker compose config generation
   let output = {
-    version: "3",
     name: `cess-${mode}`,
     services: {},
   };
