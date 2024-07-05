@@ -13,7 +13,7 @@ async function genCesealComposeConfigs(config, _) {
   let cesealCmds = [
     "--chain-ws-endpoint", `${chainWsUrl}`,
     "--internal-endpoint", `http://ceseal:8000`,
-    "--attestation-provider", "ias",
+    "--attestation-provider", `${specCfg.raType}`,
     "--public-endpoint", `${specCfg.endpointOnChain}`,
     "--mnemonic", `${specCfg.mnemonic}`,
     "--fast-sync",
