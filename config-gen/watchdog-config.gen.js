@@ -1,8 +1,6 @@
-const {func} = require("joi");
 const Joi = require("joi");
 const {watchdogSchema} = require("../schema/watchdog.schema");
-const yaml = require("js-yaml");
-const watchdogHomePath = "/opt/cess/watchdog"
+const watchdogHomePath = "/opt/cess/mineradm/watchdog"
 
 async function getPublicIP() {
   const urls = [
@@ -37,9 +35,7 @@ async function getPublicIP() {
 }
 
 async function genWatchdogConfig(config) {
-  if (!config.watchdog.enable) {
-    return null
-  } else {
+  function extractedData() {
     let updatedWatchdogSchema = watchdogSchema.keys({
       enable: Joi.any().strip(),
       apiUrl: Joi.any().strip()
@@ -50,6 +46,19 @@ async function genWatchdogConfig(config) {
     updatedWatchdogSchema.scrapeInterval = config.watchdog.scrapeInterval
     updatedWatchdogSchema.hosts = config.watchdog.hosts
     updatedWatchdogSchema.alert = config.watchdog.alert
+    return updatedWatchdogSchema;
+  }
+  if (!config.watchdog.enable) {
+    return null
+  } else {
+    let updatedWatchdogSchema = extractedData();
+    for (let i = 0; i < config.watchdog.hosts.length; i++) {
+      if (config.watchdog.hosts[i].ca_path && config.watchdog.hosts[i].cert_path && config.watchdog.hosts[i].key_path) {
+        updatedWatchdogSchema.hosts[i].ca_path = `/opt/cess/watchdog/${config.watchdog.hosts[i].ca_path.split("/").pop()}`;
+        updatedWatchdogSchema.hosts[i].cert_path = `/opt/cess/watchdog/${config.watchdog.hosts[i].cert_path.split("/").pop()}`;
+        updatedWatchdogSchema.hosts[i].key_path = `/opt/cess/watchdog/${config.watchdog.hosts[i].key_path.split("/").pop()}`;
+      }
+    }
     return {
       config: await updatedWatchdogSchema.validateAsync(updatedWatchdogSchema, {allowUnknown: true, stripUnknown: true}),
       paths: [{
@@ -67,12 +76,12 @@ async function genWatchdogComposeConfig(config) {
   let apiUrl
   apiUrl = config.watchdog.apiUrl ? config.watchdog.apiUrl : await getPublicIP()
   let watchdog = []
-  let watchVolumeMappings = [`${watchdogHomePath}:/opt/watchdog`];
+  let watchVolumeMappings = [`${watchdogHomePath}/config.yaml:/opt/cess/watchdog/config.yaml`];
   for (let i = 0; i < config.watchdog.hosts.length; i++) {
     if (config.watchdog.hosts[i].ca_path && config.watchdog.hosts[i].cert_path && config.watchdog.hosts[i].key_path) {
-      watchVolumeMappings.push(`${config.watchdog.hosts[i].ca_path}:/opt/watchdog/tls/${config.watchdog.hosts[i].ca_path.split("/").pop()}`);
-      watchVolumeMappings.push(`${config.watchdog.hosts[i].cert_path}:/opt/watchdog/tls/${config.watchdog.hosts[i].cert_path.split("/").pop()}`);
-      watchVolumeMappings.push(`${config.watchdog.hosts[i].key_path}:/opt/watchdog/tls/${config.watchdog.hosts[i].key_path.split("/").pop()}`);
+      watchVolumeMappings.push(`${config.watchdog.hosts[i].ca_path}:/opt/cess/watchdog/${config.watchdog.hosts[i].ca_path.split("/").pop()}`);
+      watchVolumeMappings.push(`${config.watchdog.hosts[i].cert_path}:/opt/cess/watchdog/${config.watchdog.hosts[i].cert_path.split("/").pop()}`);
+      watchVolumeMappings.push(`${config.watchdog.hosts[i].key_path}:/opt/cess/watchdog/${config.watchdog.hosts[i].key_path.split("/").pop()}`);
     }
   }
   watchdog[0] = {
