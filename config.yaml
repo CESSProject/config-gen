@@ -91,7 +91,7 @@ watchdog:
   # external: run with 0.0.0.0 or 127.0.0.1
   external: true
   # apiUrl: watchdog-web request this apiUrl to fetch data from watchdog: <my_public_ip:13081 or a domain>
-  apiUrl: ""
+  apiUrl: "123"
   # watchdog server listen http port at: 13081
   port: 13081
   # the interval of query data from chain for each miner, 30 <= scrapeInterval <= 300
@@ -108,12 +108,6 @@ watchdog:
       ca_path: /etc/docker/tls/1.1.1.1-ca.pem
       cert_path: /etc/docker/tls/1.1.1.1-cert.pem
       key_path: /etc/docker/tls/1.1.1.1-key.pem
-    - ip: 2.1.1.1 # 1.1.1.1 is a public IP
-      # make sure docker daemon tls listen at 2376: https://docs.docker.com/engine/security/protect-access/
-      port: 2376
-      ca_path: /etc/docker/tls/2.1.1.1-ca.pem
-      cert_path: /etc/docker/tls/2.1.1.1-cert.pem
-      key_path: /etc/docker/tls/2.1.1.1-key.pem
   alert:
     # enable alert or not
     enable: false
