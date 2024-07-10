@@ -6,6 +6,7 @@ const { minersSchema } = require('./miners.schema')
 const { minerSchema } = require('./miner.schema')
 const { cesealSchema } = require('./ceseal.schema')
 const { nginxSchema } = require('./nginx.schema')
+const {watchdogSchema} = require("./watchdog.schema");
 
 function getConfigSchema(config) {
   let sMap = {
@@ -13,20 +14,21 @@ function getConfigSchema(config) {
   }
 
   const mode = config.node.mode;
-  if (mode == "authority") {
+  if (mode === "authority") {
     sMap["chain"] = chainSchema.optional()
     sMap["ceseal"] = cesealSchema.required()
     sMap["nginx"] = nginxSchema.optional()
   }
-  else if (mode == "storage") {
+  else if (mode === "storage") {
     sMap["chain"] = chainSchema.optional();
     sMap["miner"] = minerSchema.required();
   }
-  else if (mode == "multiminer") {
+  else if (mode === "multiminer") {
     sMap["chain"] = chainSchema.required();
     sMap["miners"] = minersSchema.required()
+    sMap["watchdog"] = watchdogSchema.optional()
   }
-  else if (mode == "watcher" || mode == "rpcnode") {
+  else if (mode === "watcher" || mode === "rpcnode") {
     sMap["chain"] = chainSchema.required()
   }
   else {

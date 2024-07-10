@@ -26,7 +26,7 @@ async function genMinerConfig(config) {
     EarningsAcc: config.miner.incomeAccount,
     UseSpace: config.miner.space,
     Workspace: "/opt/miner-disk",
-    UseCpu: config.miner.useCpuCores || 0,
+    UseCpu: config.miner.UseCpu || 0,
     StakingAcc: config.miner.stakerAccount || null,
     TeeList: config.miner.reservedTws || null,
   }
