@@ -1,5 +1,13 @@
 const Joi = require('joi');
 
+const isPrivateIP = (ip) => {
+  return (
+    /^(10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|192\.168\.)/.test(ip) ||
+    ip === '127.0.0.1' ||
+    ip === '::1'
+  );
+};
+
 const watchdogSchema = Joi.object({
   enable: Joi.boolean().required(),
   external: Joi.boolean().required(),
@@ -11,29 +19,35 @@ const watchdogSchema = Joi.object({
       ip: Joi.string().ip().required(),
       port: Joi.number().port().required(),
       ca_path: Joi.string().when('ip', {
-        is: Joi.string().ip({
-          version: ['ipv4', 'ipv6'],
-          cidr: 'optional'
-        }).not('127.0.0.1', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'),
+        is: Joi.string().custom((value, helpers) => {
+          if (!isPrivateIP(value)) {
+            return value;
+          }
+          return helpers.error('ip.invalid');
+        }, 'custom validation for non-private IP'),
         then: Joi.required(),
         otherwise: Joi.forbidden()
       }),
       cert_path: Joi.string().when('ip', {
-        is: Joi.string().ip({
-          version: ['ipv4', 'ipv6'],
-          cidr: 'optional'
-        }).not('127.0.0.1', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'),
+        is: Joi.string().custom((value, helpers) => {
+          if (!isPrivateIP(value)) {
+            return value;
+          }
+          return helpers.error('ip.invalid');
+        }, 'custom validation for non-private IP'),
         then: Joi.required(),
         otherwise: Joi.forbidden()
       }),
       key_path: Joi.string().when('ip', {
-        is: Joi.string().ip({
-          version: ['ipv4', 'ipv6'],
-          cidr: 'optional'
-        }).not('127.0.0.1', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'),
+        is: Joi.string().custom((value, helpers) => {
+          if (!isPrivateIP(value)) {
+            return value;
+          }
+          return helpers.error('ip.invalid');
+        }, 'custom validation for non-private IP'),
         then: Joi.required(),
         otherwise: Joi.forbidden()
-      })
+      }),
     })).min(1).required(),
   alert: Joi.object({
     enable: Joi.boolean().required(),
