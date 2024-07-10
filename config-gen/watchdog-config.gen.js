@@ -36,31 +36,37 @@ async function getPublicIP() {
 
 async function genWatchdogConfig(config) {
   function extractedData() {
+    let copyConfig = JSON.parse(JSON.stringify(config.watchdog)); // must use deep copy
     let updatedWatchdogSchema = watchdogSchema.keys({
       enable: Joi.any().strip(),
       apiUrl: Joi.any().strip()
     });
-    updatedWatchdogSchema.port = config.watchdog.port
-    updatedWatchdogSchema.external = config.watchdog.external
-    updatedWatchdogSchema.enable = config.watchdog.enable
-    updatedWatchdogSchema.scrapeInterval = config.watchdog.scrapeInterval
-    updatedWatchdogSchema.hosts = config.watchdog.hosts
-    updatedWatchdogSchema.alert = config.watchdog.alert
+    updatedWatchdogSchema.port = copyConfig.port
+    updatedWatchdogSchema.external = copyConfig.external
+    updatedWatchdogSchema.enable = copyConfig.enable
+    updatedWatchdogSchema.scrapeInterval = copyConfig.scrapeInterval
+    updatedWatchdogSchema.hosts = copyConfig.hosts
+    updatedWatchdogSchema.alert = copyConfig.alert
     return updatedWatchdogSchema;
   }
+
   if (!config.watchdog.enable) {
     return null
   } else {
-    let updatedWatchdogSchema = extractedData();
+    let updatedWatchdog = extractedData();
     for (let i = 0; i < config.watchdog.hosts.length; i++) {
       if (config.watchdog.hosts[i].ca_path && config.watchdog.hosts[i].cert_path && config.watchdog.hosts[i].key_path) {
-        updatedWatchdogSchema.hosts[i].ca_path = `/opt/cess/watchdog/${config.watchdog.hosts[i].ca_path.split("/").pop()}`;
-        updatedWatchdogSchema.hosts[i].cert_path = `/opt/cess/watchdog/${config.watchdog.hosts[i].cert_path.split("/").pop()}`;
-        updatedWatchdogSchema.hosts[i].key_path = `/opt/cess/watchdog/${config.watchdog.hosts[i].key_path.split("/").pop()}`;
+        updatedWatchdog.hosts[i].ca_path = `/opt/cess/watchdog/tls/${config.watchdog.hosts[i].ca_path.split("/").pop()}`;
+        updatedWatchdog.hosts[i].cert_path = `/opt/cess/watchdog/tls/${config.watchdog.hosts[i].cert_path.split("/").pop()}`;
+        updatedWatchdog.hosts[i].key_path = `/opt/cess/watchdog/tls/${config.watchdog.hosts[i].key_path.split("/").pop()}`;
       }
     }
+    let newWatchdogSchema = watchdogSchema.keys({
+      enable: Joi.any().strip(),
+      apiUrl: Joi.any().strip()
+    });
     return {
-      config: await updatedWatchdogSchema.validateAsync(updatedWatchdogSchema, {allowUnknown: true, stripUnknown: true}),
+      config: await newWatchdogSchema.validateAsync(updatedWatchdog, {allowUnknown: true, stripUnknown: true}),
       paths: [{
         required: true,
         path: watchdogHomePath
@@ -79,9 +85,9 @@ async function genWatchdogComposeConfig(config) {
   let watchVolumeMappings = [`${watchdogHomePath}/config.yaml:/opt/cess/watchdog/config.yaml`];
   for (let i = 0; i < config.watchdog.hosts.length; i++) {
     if (config.watchdog.hosts[i].ca_path && config.watchdog.hosts[i].cert_path && config.watchdog.hosts[i].key_path) {
-      watchVolumeMappings.push(`${config.watchdog.hosts[i].ca_path}:/opt/cess/watchdog/${config.watchdog.hosts[i].ca_path.split("/").pop()}`);
-      watchVolumeMappings.push(`${config.watchdog.hosts[i].cert_path}:/opt/cess/watchdog/${config.watchdog.hosts[i].cert_path.split("/").pop()}`);
-      watchVolumeMappings.push(`${config.watchdog.hosts[i].key_path}:/opt/cess/watchdog/${config.watchdog.hosts[i].key_path.split("/").pop()}`);
+      watchVolumeMappings.push(`${config.watchdog.hosts[i].ca_path}:/opt/cess/watchdog/tls/${config.watchdog.hosts[i].ca_path.split("/").pop()}`);
+      watchVolumeMappings.push(`${config.watchdog.hosts[i].cert_path}:/opt/cess/watchdog/tls/${config.watchdog.hosts[i].cert_path.split("/").pop()}`);
+      watchVolumeMappings.push(`${config.watchdog.hosts[i].key_path}:/opt/cess/watchdog/tls/${config.watchdog.hosts[i].key_path.split("/").pop()}`);
     }
   }
   watchdog[0] = {
