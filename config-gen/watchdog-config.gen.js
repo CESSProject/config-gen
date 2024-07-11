@@ -82,7 +82,7 @@ async function genWatchdogComposeConfig(config) {
   let apiUrl
   apiUrl = config.watchdog.apiUrl ? config.watchdog.apiUrl : await getPublicIP()
   let watchdog = []
-  let watchVolumeMappings = [`${watchdogHomePath}/config.yaml:/opt/cess/watchdog/config.yaml`];
+  let watchVolumeMappings = [`/opt/cess/mineradm/build/watchdog/config.yaml:/opt/cess/watchdog/config.yaml`];
   for (let i = 0; i < config.watchdog.hosts.length; i++) {
     if (config.watchdog.hosts[i].ca_path && config.watchdog.hosts[i].cert_path && config.watchdog.hosts[i].key_path) {
       watchVolumeMappings.push(`${config.watchdog.hosts[i].ca_path}:/opt/cess/watchdog/tls/${config.watchdog.hosts[i].ca_path.split("/").pop()}`);
@@ -96,7 +96,7 @@ async function genWatchdogComposeConfig(config) {
     network_mode: 'host',
     restart: 'always',
     environment: [
-      `- API_URL=http://${apiUrl}:${config.watchdog.port}`,
+      `API_URL=http://${apiUrl}:${config.watchdog.port}`,
     ],
     logging: {
       driver: "json-file",
