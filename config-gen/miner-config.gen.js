@@ -21,7 +21,7 @@ async function genMinerConfig(config) {
   const apiConfig = {
     Rpc: ensureChainWsUrls(config),
     Port: config.miner.port,
-    Boot: [config.miner.bootAddr || process.env["BUKET_BOOT"] || "_dnsaddr.bootstrap-kldr.cess.cloud"],
+    Boot: [config.miner.bootAddr || process.env["MINER_BOOT"] || `_dnsaddr.boot-miner-${imageTagByProfile(config.node.profile)}.cess.cloud`],
     Mnemonic: config.miner.signPhrase,
     EarningsAcc: config.miner.incomeAccount,
     UseSpace: config.miner.space,

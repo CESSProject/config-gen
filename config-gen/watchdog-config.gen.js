@@ -1,6 +1,6 @@
 const Joi = require("joi");
 const {watchdogSchema} = require("../schema/watchdog.schema");
-const watchdogHomePath = "/opt/cess/mineradm/watchdog"
+const watchdogHomePath = "/opt/cess/config/multiminer/watchdog"
 
 async function getPublicIP() {
   const urls = [
@@ -11,7 +11,7 @@ async function getPublicIP() {
     {url: "https://ip4.seeip.org/", type: "text"},
     {url: "https://ip.seeip.org/", type: "text"},
     {url: "https://api.my-ip.io/ip", type: "text"},
-    {url: "https://api.ipify.org?format=json", type: "text", key: "ip"},
+    {url: "https://api.ipify.org?format=json", type: "json", key: "ip"},
   ];
 
   for (const {url, type, key} of urls) {

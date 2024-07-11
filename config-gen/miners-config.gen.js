@@ -1,5 +1,5 @@
 const {imageTagByProfile} = require('../utils')
-const minersHomePath = "/opt/cess/storage/miners"
+const minersHomePath = "/opt/cess/config/multiminer/miners"
 
 function ensureChainWsUrlsInMultiminerMode(config, index) {
   // TODO: For compatibility, keep the deprecated node.chainWsUrl and node.backupChainWsUrls

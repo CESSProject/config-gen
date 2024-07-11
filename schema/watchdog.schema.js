@@ -61,7 +61,7 @@ const watchdogSchema = Joi.object({
       smtp_port: Joi.number().port().optional(),
       smtp_account: Joi.string().email().optional(),
       smtp_password: Joi.string().optional(),
-      receive_addr: Joi.array().items(Joi.string().email()).min(1).optional()
+      receiver: Joi.array().items(Joi.string().email()).min(1).optional()
     }).when('enable', {
       is: true,
       then: Joi.optional(),
