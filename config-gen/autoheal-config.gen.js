@@ -9,10 +9,10 @@ async function genAutoHealComposeConfig(config, outputCfg) {
       '/var/run/docker.sock:/var/run/docker.sock',
     ],
     environment: [
-      '- AUTOHEAL_CONTAINER_LABEL=all',
-      '- AUTOHEAL_INTERVAL=60',
-      '- AUTOHEAL_START_PERIOD=180',
-      '- AUTOHEAL_DEFAULT_STOP_TIMEOUT=10',
+      'AUTOHEAL_CONTAINER_LABEL=all',
+      'AUTOHEAL_INTERVAL=60',
+      'AUTOHEAL_START_PERIOD=180',
+      'AUTOHEAL_DEFAULT_STOP_TIMEOUT=10',
     ],
   }
 }
