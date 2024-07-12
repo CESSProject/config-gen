@@ -96,7 +96,7 @@ async function genWatchdogComposeConfig(config) {
     network_mode: 'host',
     restart: 'always',
     environment: [
-      `API_URL=http://${apiUrl}:${config.watchdog.port}`,
+      `NEXT_PUBLIC_API_URL=http://${apiUrl}:${config.watchdog.port}`,
     ],
     logging: {
       driver: "json-file",
