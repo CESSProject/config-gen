@@ -4,8 +4,8 @@ const fs = require('fs-extra')
 function getChainHomePath(config) {
   const nodeMode = config.node.mode || "authority"
   if (nodeMode === "multiminer") {
-    // when press tab in linux, it can distinguish /opt/cess/miners and /opt/cess/minersadm
-    return "/opt/cess/data/" + nodeMode + "/chain"
+    // when press tab in linux, it can distinguish /opt/cess/data and /opt/cess/minersadm
+    return "/opt/cess/config/" + nodeMode + "/chain"
   }
   return "/opt/cess/" + nodeMode + "/chain"
 }
@@ -25,9 +25,9 @@ async function genChainComposeConfig(config) {
   let volumes = [
     getChainHomePath(config) + ':/opt/cess/data'
   ];
-  if (config.node.profile == "devnet") {
+  if (config.node.profile === "devnet") {
     chainSpec = config.chain.chainSpec || "cess-devnet"
-    // in the config-gen container enviroment
+    // in the config-gen container environment
     const customSpecInCg = "/opt/app/etc/customSpecRaw.json";
     if (fs.pathExistsSync(customSpecInCg)) {
       volumes.push("/opt/cess/nodeadm/etc:/opt/cess/etc");
@@ -55,9 +55,9 @@ async function genChainComposeConfig(config) {
     '75'
   ]
 
-  if (config.node.mode == "authority") {
+  if (config.node.mode === "authority") {
     args.push('--validator', '--pruning', 'archive')
-  } else if (config.node.mode == "rpcnode" || config.node.mode == "watcher" || config.node.mode == "multiminer") {
+  } else if (config.node.mode === "rpcnode" || config.node.mode === "watcher" || config.node.mode === "multiminer") {
     args.push('--pruning', `${config.chain.pruning}`, '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
   }
 

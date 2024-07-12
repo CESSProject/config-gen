@@ -42,7 +42,7 @@ async function main(){
     const args = process.argv.slice(2);
     let configFile = "config.yaml";
     if (args.length >= 1) {
-      if (args[0].toLowerCase() == "version") {
+      if (args[0].toLowerCase() === "version") {
         const {name, version} = require('./package.json');
         console.log(name, version);
         return;

@@ -31,35 +31,33 @@ miner:
 
 ## miner configurations  (multi storage miner mode)
 miners:
-  # P2P communication port
-#  - name: "miner1"
+    # P2P communication port
   - port: 15001
     # Maximum space used, the unit is GiB
     UseSpace: 1000
     # Number of cpu's used, 0 means use all
     UseCpu: 2
     # earnings account
-    earningsAcc: "cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    earningsAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     # Staking account
     # If you fill in the staking account, the staking will be paid by the staking account,
     # otherwise the staking will be paid by the signature account.
-    stakingAcc: "cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    stakingAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     # Signature account mnemonic
     # each miner's mnemonic should be different
-    mnemonic: "aaaaa bbbbb ccccc ddddd eeeee fffff ggggg hhhhh iiiii jjjjj kkkkk lllll"
+    mnemonic: aaaaa bbbbb ccccc ddddd eeeee fffff ggggg hhhhh iiiii jjjjj kkkkk lllll
     # a directory mount with filesystem
     diskPath: "/mnt/cess_storage1"
     # The rpc endpoint of the chain node
-    chainWsUrl: "ws://127.0.0.1:9944/"
+    chainWsUrl: ws://127.0.0.1:9944/
     backupChainWsUrls: []
-    # Priority tee list address
+    # Priority tee list address (will connect to others tee node in cess-network automatically if localhost cannot be connected)
     TeeList:
-      - "127.0.0.1:8080"
-      - "127.0.0.1:8081"
+      - 127.0.0.1:8080
+      - 127.0.0.1:8081
     # Bootstrap Nodes
-    Boot: "_dnsaddr.boot-miner-testnet.cess.cloud"
+    Boot: _dnsaddr.boot-miner-testnet.cess.cloud
 
-#  - name: "miner2"
     # P2P communication port
   - port: 15002
     # Maximum space used, the unit is GiB
@@ -67,31 +65,71 @@ miners:
     # Number of cpu's used
     UseCpu: 2
     # earnings account
-    earningsAcc: "cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    earningsAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     # Staking account
     # If you fill in the staking account, the staking will be paid by the staking account,
     # otherwise the staking will be paid by the signature account.
-    stakingAcc: "cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    stakingAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     # Signature account mnemonic
     # each miner's mnemonic should be different
-    mnemonic: "lllll kkkkk jjjjj iiiii hhhhh ggggg fffff eeeee ddddd ccccc bbbbb aaaaa"
+    mnemonic: lllll kkkkk jjjjj iiiii hhhhh ggggg fffff eeeee ddddd ccccc bbbbb aaaaa
     # a directory mount with filesystem
     diskPath: "/mnt/cess_storage2"
     # The rpc endpoint of the chain node
-    chainWsUrl: "ws://127.0.0.1:9944/"
+    chainWsUrl: ws://127.0.0.1:9944/
     backupChainWsUrls: []
-    # Priority tee list address
+    # Priority tee list address (will connect to others tee node in cess-network automatically if localhost cannot be connected)
     TeeList:
-      - "127.0.0.1:8080"
-      - "127.0.0.1:8081"
+      - 127.0.0.1:8080
+      - 127.0.0.1:8081
     # Bootstrap Nodes
-    Boot: "_dnsaddr.boot-miner-testnet.cess.cloud"
+    Boot: _dnsaddr.boot-miner-testnet.cess.cloud
 
+watchdog:
+  # enable miners monitor or not
+  enable: true
+  # external: run with 0.0.0.0 or 127.0.0.1
+  external: true
+  # apiUrl: watchdog-web request this apiUrl to fetch data from watchdog: <my_public_ip:13081 or a domain>
+  # if empty or null, will set this value to http://<public ip>:13081 automatically
+  apiUrl: ""
+  # watchdog server listen http port at: 13081
+  port: 13081
+  # the interval of query data from chain for each miner, 30 <= scrapeInterval <= 300
+  scrapeInterval: 60
+  hosts:
+    - ip: 127.0.0.1 # 127.x, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 is a private IP
+      # make sure docker daemon listen at 2375: https://docs.docker.com/config/daemon/remote-access/
+      port: 2375
+    # Configure remote access for Docker daemon in public network must use tls to make sure mnemonic safe
+    # set ca/crt/key path if the ip no belongs to [ 127.x, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 ]
+    - ip: 1.1.1.1 # 1.1.1.1 is a public IP
+      # make sure docker daemon tls listen at 2376: https://docs.docker.com/engine/security/protect-access/
+      port: 2376
+      ca_path: /etc/docker/tls/1.1.1.1-ca.pem
+      cert_path: /etc/docker/tls/1.1.1.1-cert.pem
+      key_path: /etc/docker/tls/1.1.1.1-key.pem
+  alert:
+    # enable alert or not
+    enable: false
+    # send webhook to alert someone
+    webhook:
+      - https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX
+      - https://discordapp.com/api/webhooks/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    # send email to alert someone
+    email:
+      smtp_endpoint: smtp.example.com
+      smtp_port: 80
+      smtp_account: myservice@example.com
+      smtp_password: my_pwd
+      receiver:
+        - example1@gmail.com
+        - example2@outlook.com
 
 ## ceseal configurations
 ceseal:
   chainWsUrl: "ws://127.0.0.1:9944"
-  endpointOnChain: "http://abc.com:19999"
+  endpointOnChain: "http://example.com:19999"
   publicPort: 19999
   role: Full
   mnemonic: "worth swallow between garage novel repair february panther million report hip token"
