@@ -1,4 +1,4 @@
-async function genAutoHealComposeConfig(config, outputCfg) {
+async function genAutoHealComposeConfig() {
   return {
     image: 'willfarrell/autoheal:latest',
     container_name: 'autoheal',

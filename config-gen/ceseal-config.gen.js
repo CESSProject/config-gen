@@ -5,7 +5,7 @@ const cesealHomePath = "/opt/cess/authority/ceseal";
 async function genCesealComposeConfigs(config, _) {
   const specCfg = config.ceseal;
   let chainWsUrl = specCfg.chainWsUrl;
-  if (!config.node.externalChain && chainWsUrl.indexOf(chainHostName) == -1) {
+  if (!config.node.externalChain && chainWsUrl.indexOf(chainHostName) === -1) {
     chainWsUrl = `ws://${chainHostName}:9944`
   }
   const cesealHostname = "ceseal";

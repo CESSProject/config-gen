@@ -1,4 +1,4 @@
-async function genWatchtowerComposeConfig(config, outputCfg) {
+async function genWatchtowerComposeConfig() {
   let args = ["--cleanup", "--interval", "300"]
   return {
     image: 'containrrr/watchtower',
