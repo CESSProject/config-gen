@@ -10,7 +10,7 @@ function getChainHomePath(config) {
   return "/opt/cess/" + nodeMode + "/chain"
 }
 
-async function genChainConfig(config, outputCfg) {
+async function genChainConfig(config) {
   return {
     config: config.chain,
     paths: [{

@@ -78,8 +78,10 @@ async function genConfig(config, outputOpts) {
     if (!config[cg.name] || !cg.configFunc) {
       continue;
     }
-    const ret = await cg.configFunc(config, outputOpts);
-    await writeConfig(path.join(baseDir, cg.to), ret.config);
+    const ret = await cg.configFunc(config);
+    if (ret) {
+      await writeConfig(path.join(baseDir, cg.to), ret.config);
+    }
     outputs.push({
       generator: cg.name,
       ...ret,
