@@ -28,10 +28,10 @@ async function getPublicIP() {
         return text.trim();
       }
     } catch (error) {
-      console.error(`Failed to get IP from ${url}:`, error);
+
     }
   }
-  throw new Error("Failed to get public IP from all sources");
+  return "127.0.0.1"
 }
 
 async function genWatchdogConfig(config) {

@@ -9,11 +9,11 @@ const isPrivateIP = (ip) => {
 };
 
 const watchdogSchema = Joi.object({
-  enable: Joi.boolean().required(),
-  external: Joi.boolean().required(),
+  enable: Joi.boolean().required().default(false),
+  external: Joi.boolean().required().default(false),
   apiUrl: Joi.string().optional().allow(""),
-  port: Joi.number().integer().required(),
-  scrapeInterval: Joi.number().integer().required(),
+  port: Joi.number().integer().required().default(13081),
+  scrapeInterval: Joi.number().integer().required().default(60),
   hosts: Joi.array().items(
     Joi.object({
       ip: Joi.string().ip().required(),
@@ -50,7 +50,7 @@ const watchdogSchema = Joi.object({
       }),
     })).min(1).required(),
   alert: Joi.object({
-    enable: Joi.boolean().required(),
+    enable: Joi.boolean().required().default(false),
     webhook: Joi.array().items(Joi.string().uri()).when('enable', {
       is: true,
       then: Joi.optional(),
