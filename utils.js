@@ -29,9 +29,7 @@ async function writeJson(path, cfg) {
 }
 
 async function writeYaml(path, cfg) {
-  await fs.outputFile(path, yaml.safeDump(cfg, {
-    ident: 2,
-  }))
+  await fs.outputFile(path, yaml.safeDump(cfg, {ident: 2, lineWidth: -1}))
   return true
 }
 

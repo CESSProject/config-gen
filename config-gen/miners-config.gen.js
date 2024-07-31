@@ -1,5 +1,5 @@
 const {imageTagByProfile} = require('../utils')
-const minersHomePath = "/opt/cess/storage/miners"
+const minersHomePath = "/opt/cess/config/multiminer/miners"
 
 function ensureChainWsUrlsInMultiminerMode(config, index) {
   // TODO: For compatibility, keep the deprecated node.chainWsUrl and node.backupChainWsUrls
@@ -22,7 +22,7 @@ async function genMinersConfig(config) {
   const miners = []
   for (let i = 0; i < len; i++) {
     miners[i] = {
-      Name: config.miners[i].name || null,
+      Name: config.miners[i].name || `miner${i+1}`,
       Port: config.miners[i].port,
       EarningsAcc: config.miners[i].earningsAcc || config.miners[i].incomeAccount,
       StakingAcc: config.miners[i].stakingAcc || config.miners[i].stakerAccount || null,

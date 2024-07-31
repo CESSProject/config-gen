@@ -19,7 +19,7 @@ const minerSchema = Joi.object({
   extraCmdArgs: Joi.string().optional(),
   reservedTws: Joi.array().optional(),
   TeeList: Joi.array().optional(),
-  name: Joi.string().optional().default('miner')
+  name: Joi.string().optional()
 }).xor('Boot', 'bootAddr') // there's one item and there's only one item can be true
   .xor('mnemonic', 'signPhrase')
   .xor('earningsAcc', 'incomeAccount')

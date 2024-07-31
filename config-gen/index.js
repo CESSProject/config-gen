@@ -6,6 +6,7 @@ const { writeConfig, chainHostName } = require("../utils");
 const { genChainConfig, genChainComposeConfig } = require("./chain-config.gen");
 const { genMinerConfig, genMinerComposeConfig } = require("./miner-config.gen");
 const { genMinersConfig, genMinersComposeConfig } = require("./miners-config.gen");
+const { genWatchdogConfig, genWatchdogComposeConfig } = require("./watchdog-config.gen");
 const { genCesealComposeConfigs } = require("./ceseal-config.gen");
 const { genNginxComposeConfigs } = require("./nginx-config.gen");
 const { genWatchtowerComposeConfig } = require("./watchtower-config.gen");
@@ -61,6 +62,12 @@ const configGenerators = [
     name: "autoheal",
     composeFunc: genAutoHealComposeConfig,
   },
+  {
+    name: "watchdog",
+    configFunc: genWatchdogConfig,
+    to: path.join("watchdog", "config.yaml"),
+    composeFunc: genWatchdogComposeConfig,
+  },
 ];
 
 async function genConfig(config, outputOpts) {
@@ -71,8 +78,10 @@ async function genConfig(config, outputOpts) {
     if (!config[cg.name] || !cg.configFunc) {
       continue;
     }
-    const ret = await cg.configFunc(config, outputOpts);
-    await writeConfig(path.join(baseDir, cg.to), ret.config);
+    const ret = await cg.configFunc(config);
+    if (ret) {
+      await writeConfig(path.join(baseDir, cg.to), ret.config);
+    }
     outputs.push({
       generator: cg.name,
       ...ret,
@@ -91,7 +100,6 @@ async function genComposeConfig(config) {
   }
   // docker compose config generation
   let output = {
-    version: "3",
     name: `cess-${mode}`,
     services: {},
   };
@@ -101,7 +109,7 @@ async function genComposeConfig(config) {
     if (!serviceCfg["container_name"]) {
       serviceCfg["container_name"] = name;
     }
-    if (serviceCfg.networks && serviceCfg.networks.indexOf("ceseal") != -1) {
+    if (serviceCfg.networks && serviceCfg.networks.indexOf("ceseal") !== -1) {
       hasCesealNetwork = true;
     }
     return {
@@ -117,7 +125,10 @@ async function genComposeConfig(config) {
     if (!(config[cg.name] || thirdPartyComponent.includes(cg.name))) {
       continue;
     }
-    if (isExternalChain && cg.name === "chain" && !(mode == "watcher" || mode == "rpcnode")) {  //RPC-Node mode is not affected by 'node.externalChain'
+    if (cg.name === "watchdog" && !config.watchdog.enable) {
+      continue
+    }
+    if (isExternalChain && cg.name === "chain" && !(mode === "watcher" || mode === "rpcnode")) {  //RPC-Node mode is not affected by 'node.externalChain'
       continue;
     }
     const serviceCfg = await cg.composeFunc(config);
@@ -168,8 +179,8 @@ function handleContainersToWatch(dockerComposeConfig, noWatchContainers) {
   for (const [_, val] of Object.entries(dockerComposeConfig.services)) {
     const containerName = val.container_name;
     if (
-      containerName != "watchtower" &&
-      noWatchContainers.indexOf(containerName) == -1
+      containerName !== "watchtower" &&
+      noWatchContainers.indexOf(containerName) === -1
     ) {
       containers.push(containerName);
     }
