@@ -13,7 +13,7 @@ async function genCesealComposeConfigs(config, _) {
   let cesealCmds = [
     "--chain-ws-endpoint", `${chainWsUrl}`,
     "--internal-endpoint", `http://ceseal:8000`,
-    "--attestation-provider", "ias",
+    "--attestation-provider", `${specCfg.raType}`,
     "--public-endpoint", `${specCfg.endpointOnChain}`,
     "--mnemonic", `${specCfg.mnemonic}`,
     "--fast-sync",
@@ -34,7 +34,8 @@ async function genCesealComposeConfigs(config, _) {
       environment: [
         "RUST_LOG=debug,h2=info,hyper=info,reqwest=info,tower=info",
         "RUST_BACKTRACE=full",
-        `EXTRA_OPTS=--role=${specCfg.role} `
+        `EXTRA_OPTS=--role=${specCfg.role} `,
+        `RA_METHOD=${specCfg.raType}`
       ],
       networks: ["ceseal"],
       volumes: [`${cesealHomePath}/data:/opt/ceseal/data`, `${cesealHomePath}/backups:/opt/ceseal/backups`],
