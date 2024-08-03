@@ -52,7 +52,9 @@ async function genChainComposeConfig(config) {
     '--in-peers',
     '75',
     '--out-peers',
-    '75'
+    '75',
+    '--rpc-max-response-size',
+    '32'
   ]
 
   if (config.node.mode === "authority") {
