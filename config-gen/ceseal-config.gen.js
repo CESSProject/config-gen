@@ -58,7 +58,14 @@ async function genCesealComposeConfigs(config, _) {
       environment: ["RUST_LOG=debug,h2=info,hyper=info,reqwest=info,tower=info", "RUST_BACKTRACE=full"],
       networks: ["ceseal"],
       extra_hosts: ["host.docker.internal:host-gateway"],
-      depends_on: ["ceseal", "chain"],
+      depends_on: {
+        ceseal: {
+          condition: "service_healthy"
+        },
+        chain: {
+          condition: "service_healthy"
+        }
+      },
       logging: {
         driver: "json-file",
         options: {
