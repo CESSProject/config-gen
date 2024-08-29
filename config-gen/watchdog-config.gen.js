@@ -2,36 +2,35 @@ const Joi = require("joi");
 const {watchdogSchema} = require("../schema/watchdog.schema");
 const watchdogHomePath = "/opt/cess/config/multiminer/watchdog"
 
-async function getPublicIP() {
+async function getPublicIP(config) {
   const urls = [
-    {url: "https://api.ip.sb/ip", type: "text"},
-    {url: "https://api.ipify.org?format=text", type: "text"},
-    {url: "https://ip.3322.net/", type: "text"},
-    {url: "https://ip.zxinc.org/getip", type: "text"},
-    {url: "https://ip4.seeip.org/", type: "text"},
-    {url: "https://ip.seeip.org/", type: "text"},
-    {url: "https://api.my-ip.io/ip", type: "text"},
-    {url: "https://api.ipify.org?format=json", type: "json", key: "ip"},
+    "https://api.seeip.org",
+    "https://api.ipify.org?format=json",
+    "https://api.my-ip.io/ip",
+    "https://ip.zxinc.org/getip",
+    "https://ip.3322.net/",
+    "https://api.ipify.org?format=text",
+    "https://api.ip.sb/ip"
   ];
 
-  for (const {url, type, key} of urls) {
+  for (const url of urls) {
     try {
       const response = await fetch(url);
-      if (!response.ok) {
-        continue;
-      }
-      if (type === "json") {
+      if (!response.ok) continue;
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
         const data = await response.json();
-        return key ? data[key] : data;
+        const ip = data.ip || data;
+        return `http://${ip}:${config.watchdog.port}`;
       } else {
         const text = await response.text();
-        return text.trim();
+        const ip = text.trim();
+        return `http://${ip}:${config.watchdog.port}`;
       }
     } catch (error) {
-
     }
   }
-  return "127.0.0.1"
+  return `http://127.0.0.1:${config.watchdog.port}`;
 }
 
 async function genWatchdogConfig(config) {
@@ -80,7 +79,7 @@ async function genWatchdogComposeConfig(config) {
     return
   }
   let apiUrl
-  apiUrl = config.watchdog.apiUrl ? config.watchdog.apiUrl : await getPublicIP()
+  apiUrl = config.watchdog.apiUrl ? config.watchdog.apiUrl : await getPublicIP(config)
   let watchdog = []
   let watchVolumeMappings = [`/opt/cess/mineradm/build/watchdog/config.yaml:/opt/cess/watchdog/config.yaml`];
   for (let i = 0; i < config.watchdog.hosts.length; i++) {
@@ -96,7 +95,7 @@ async function genWatchdogComposeConfig(config) {
     network_mode: 'host',
     restart: 'always',
     environment: [
-      `NEXT_PUBLIC_API_URL=http://${apiUrl}:${config.watchdog.port}`,
+      `NEXT_PUBLIC_API_URL=${apiUrl}`,
     ],
     logging: {
       driver: "json-file",
