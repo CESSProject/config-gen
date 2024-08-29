@@ -52,7 +52,9 @@ async function genChainComposeConfig(config) {
     '--in-peers',
     '75',
     '--out-peers',
-    '75'
+    '75',
+    '--rpc-max-response-size',
+    '64'
   ]
 
   if (config.node.mode === "authority") {
@@ -66,6 +68,26 @@ async function genChainComposeConfig(config) {
     args.push(...extraCmdArgs);
   }
 
+  //ownnet just for devleper testing the new feature just finished,so just use simply argument run
+  if (config.node.profile == "ownnet") {
+    let arg = [
+      '--dev',
+      '--state-pruning',
+      'archive',
+    ]
+    return {
+      image: 'cesslab/cess-chain:' + imageTagByProfile(config.node.profile),
+      network_mode: 'host',
+      command: arg,
+      logging: {
+        driver: "json-file",
+        options: {
+          "max-size": "300m",
+          "max-file": "10"
+        }
+      },
+    }
+  }
   return {
     image: 'cesslab/cess-chain:' + imageTagByProfile(config.node.profile),
     network_mode: 'host',
