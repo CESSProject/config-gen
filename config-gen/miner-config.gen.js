@@ -1,4 +1,4 @@
-const { imageTagByProfile } = require('../utils')
+const {imageTagByProfile} = require('../utils')
 const minerHomePath = "/opt/cess/storage/miner"
 
 function ensureChainWsUrls(config) {
@@ -24,9 +24,9 @@ async function genMinerConfig(config) {
     Boot: [config.miner.bootAddr || process.env["MINER_BOOT"] || `_dnsaddr.boot-miner-${imageTagByProfile(config.node.profile)}.cess.cloud`],
     Mnemonic: config.miner.signPhrase,
     EarningsAcc: config.miner.incomeAccount,
-    UseSpace: config.miner.space,
+    UseSpace: config.miner.space || 300,
     Workspace: "/opt/miner-disk",
-    UseCpu: config.miner.UseCpu || 0,
+    UseCpu: config.miner.useCpuCores || config.miner.UseCpu || 0,
     StakingAcc: config.miner.stakerAccount || null,
     TeeList: config.miner.reservedTws || null,
   }
