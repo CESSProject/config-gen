@@ -1,6 +1,6 @@
 {
   "name": "config-gen",
-  "version": "1.5.6",
+  "version": "1.5.7-alpha",
   "description": "",
   "main": "index.js",
   "scripts": {
