@@ -5,8 +5,8 @@ async function genMinersConfig(config) {
   let minersConfigs = []
   for (let minerConfig of config.miners) {
     let cfg = adapterToNativeConfig(minerConfig, config.node)
-    if (!cfg.TeeList) {
-      cfg.TeeList = ["127.0.0.1:8080", "127.0.0.1:8081"]
+    if (!cfg.chain.tees) {
+      cfg.chain.tees = ["127.0.0.1:8080", "127.0.0.1:8081"]
     }
     minersConfigs.push(cfg)
   }

@@ -29,16 +29,19 @@ async function genMinerConfig(config) {
 
 function adapterToNativeConfig(minerConfig, nodeConfig) {
   return {
-    Rpc: ensureChainWsUrls(minerConfig, nodeConfig),
-    Port: minerConfig.port,
-    Boot: [minerConfig.bootAddr || process.env["MINER_BOOT"] || `_dnsaddr.boot-miner-${imageTagByProfile(nodeConfig.profile)}.cess.cloud`],
-    Mnemonic: minerConfig.signPhrase || minerConfig.mnemonic,
-    EarningsAcc: minerConfig.incomeAccount || minerConfig.earningsAcc,
-    UseSpace: minerConfig.space || minerConfig.UseSpace || 300,
-    Workspace: "/opt/miner-disk",
-    UseCpu: minerConfig.useCpuCores || minerConfig.UseCpu || 0,
-    StakingAcc: minerConfig.stakerAccount || minerConfig.stakingAcc || null,
-    TeeList: minerConfig.reservedTws || minerConfig.TeeList || null,
+    app: {
+      workspace: "/opt/miner-disk",
+      port: minerConfig.port,
+      maxusespace: minerConfig.space || minerConfig.UseSpace || 300,
+      cores: minerConfig.useCpuCores || minerConfig.UseCpu || 0,
+    },
+    chain: {
+      mnemonic: minerConfig.signPhrase || minerConfig.mnemonic,
+      stakingacc: minerConfig.stakerAccount || minerConfig.stakingAcc || null,
+      earningsacc: minerConfig.incomeAccount || minerConfig.earningsAcc,
+      rpcs: ensureChainWsUrls(minerConfig, nodeConfig),
+      tees: minerConfig.reservedTws || minerConfig.TeeList || null,
+    },
   }
 }
 

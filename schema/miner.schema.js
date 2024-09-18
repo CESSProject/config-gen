@@ -15,14 +15,11 @@ const minerSchema = Joi.object({
   useCpuCores: Joi.number().optional(),
   UseSpace: Joi.number().optional(),
   space: Joi.number().port().optional(),
-  Boot: Joi.string().optional(),
-  bootAddr: Joi.string().optional(),
   extraCmdArgs: Joi.string().optional(),
   reservedTws: Joi.array().optional(),
   TeeList: Joi.array().optional(),
   name: Joi.string().optional()
-}).xor('Boot', 'bootAddr') // nodeadm use bootAddr and mineradm use Boot
-  .xor('mnemonic', 'signPhrase') // nodeadm use signPhrase and mineradm use mnemonic
+}).xor('mnemonic', 'signPhrase') // nodeadm use signPhrase and mineradm use mnemonic
   .xor('earningsAcc', 'incomeAccount') // nodeadm use incomeAccount and mineradm use earningsAcc
   .xor('space', 'UseSpace') // nodeadm use space and mineradm use UseSpace
   .xor('UseCpu', 'useCpuCores') // nodeadm use useCpuCores and mineradm use UseCpu
