@@ -18,7 +18,6 @@ const minerSchema = Joi.object({
   extraCmdArgs: Joi.string().optional(),
   reservedTws: Joi.array().optional(),
   TeeList: Joi.array().optional(),
-  name: Joi.string().optional(),
   apiendpoint: Joi.string().optional().allow(""),
   timeout: Joi.number().optional(),
 }).xor('mnemonic', 'signPhrase') // nodeadm use signPhrase and mineradm use mnemonic
