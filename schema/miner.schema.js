@@ -16,10 +16,11 @@ const minerSchema = Joi.object({
   extraCmdArgs: Joi.string().optional(),
   reservedTws: Joi.array().optional(),
   TeeList: Joi.array().optional(),
-  name: Joi.string().optional()
+  name: Joi.string().optional(),
+  apiendpoint: Joi.string().optional().allow("")
 }).xor('mnemonic', 'signPhrase') // nodeadm use signPhrase and mineradm use mnemonic
   .xor('earningsAcc', 'incomeAccount') // nodeadm use incomeAccount and mineradm use earningsAcc
-  .xor('space', 'UseSpace') // nodeadm use space and mineradm use UseSpace  
+  .xor('space', 'UseSpace') // nodeadm use space and mineradm use UseSpace
   // For compatibility: there's one item and there's only one item can be true
 
 module.exports = {
