@@ -1,37 +1,7 @@
 const Joi = require("joi");
 const {watchdogSchema} = require("../schema/watchdog.schema");
 const watchdogHomePath = "/opt/cess/config/multiminer/watchdog"
-
-async function getPublicIP(config) {
-  const urls = [
-    "https://api.seeip.org",
-    "https://api.ipify.org?format=json",
-    "https://api.my-ip.io/ip",
-    "https://ip.zxinc.org/getip",
-    "https://ip.3322.net/",
-    "https://api.ipify.org?format=text",
-    "https://api.ip.sb/ip"
-  ];
-
-  for (const url of urls) {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) continue;
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        const data = await response.json();
-        const ip = data.ip || data;
-        return `http://${ip}:${config.watchdog.port}`;
-      } else {
-        const text = await response.text();
-        const ip = text.trim();
-        return `http://${ip}:${config.watchdog.port}`;
-      }
-    } catch (error) {
-    }
-  }
-  return `http://127.0.0.1:${config.watchdog.port}`;
-}
+const { getPublicEndpoint } = require("../utils");
 
 async function genWatchdogConfig(config) {
   function extractedData() {
@@ -79,7 +49,7 @@ async function genWatchdogComposeConfig(config) {
     return
   }
   let apiUrl
-  apiUrl = config.watchdog.apiUrl ? config.watchdog.apiUrl : await getPublicIP(config)
+  apiUrl = config.watchdog.apiUrl ? config.watchdog.apiUrl : getPublicEndpoint(config.watchdog.port)
   let watchdog = []
   let watchVolumeMappings = [`/opt/cess/mineradm/build/watchdog/config.yaml:/opt/cess/watchdog/config.yaml`];
   for (let i = 0; i < config.watchdog.hosts.length; i++) {

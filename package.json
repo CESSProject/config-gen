@@ -17,6 +17,7 @@
     "js-yaml": "^3.14.0",
     "lodash": "^4.17.21",
     "shelljs": "^0.8.4",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "sync-request": "^6.1.0"
   }
 }

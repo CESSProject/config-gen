@@ -1,4 +1,4 @@
-const { imageTagByProfile } = require('../utils')
+const { imageTagByProfile, getPublicEndpoint} = require('../utils')
 const minerHomePath = "/opt/cess/storage/miner"
 
 function ensureChainWsUrls(minerConfig, nodeConfig) {
@@ -34,6 +34,7 @@ function adapterToNativeConfig(minerConfig, nodeConfig) {
       port: minerConfig.port,
       maxusespace: minerConfig.space || minerConfig.UseSpace || 300,
       cores: minerConfig.useCpuCores || minerConfig.UseCpu || 0,
+      apiendpoint: minerConfig.apiendpoint ? minerConfig.apiendpoint : getPublicEndpoint(minerConfig.port),
     },
     chain: {
       mnemonic: minerConfig.signPhrase || minerConfig.mnemonic,

@@ -19,7 +19,7 @@ chain:
 
 ## miner configurations (single storage miner mode)
 miner:
-  chainWsUrl: "ws://127.0.0.1:9944"
+  chainWsUrl: "ws://127.0.0.1:9944/ws/"
   backupChainWsUrls: []
   port: 15001
   space: 300
@@ -28,11 +28,13 @@ miner:
   diskPath: "/disks/1"
   bootAddr: "_dnsaddr.bootstrap-kldr.cess.cloud"
   extraCmdArgs: " -bb  ss --sfew 3"
+  apiendpoint: ""
 
 ## miner configurations  (multi storage miner mode)
 miners:
-    # P2P communication port
   - port: 15001
+    # Use this endpoint to receive/send file, can be a domain or ip:port, default value: hostPublicIp:port
+    apiendpoint: ""
     # Maximum space used, the unit is GiB
     UseSpace: 1000
     # Number of cpu's used, 0 means use all
@@ -49,7 +51,7 @@ miners:
     # a directory mount with filesystem
     diskPath: "/mnt/cess_storage1"
     # The rpc endpoint of the chain node
-    chainWsUrl: ws://127.0.0.1:9944/
+    chainWsUrl: ws://127.0.0.1:9944/ws/
     backupChainWsUrls: []
     # Priority tee list address (will connect to others tee node in cess-network automatically if localhost cannot be connected)
     TeeList:
@@ -58,8 +60,9 @@ miners:
     # Bootstrap Nodes
     Boot: _dnsaddr.boot-miner-testnet.cess.cloud
 
-    # P2P communication port
   - port: 15002
+    # Use this endpoint to receive/send file, can be a domain or ip:port, default value: hostPublicIp:port
+    apiendpoint: ""
     # Maximum space used, the unit is GiB
     UseSpace: 1000
     # Number of cpu's used
@@ -76,7 +79,7 @@ miners:
     # a directory mount with filesystem
     diskPath: "/mnt/cess_storage2"
     # The rpc endpoint of the chain node
-    chainWsUrl: ws://127.0.0.1:9944/
+    chainWsUrl: ws://127.0.0.1:9944/ws/
     backupChainWsUrls: []
     # Priority tee list address (will connect to others tee node in cess-network automatically if localhost cannot be connected)
     TeeList:
