@@ -42,6 +42,7 @@ function adapterToNativeConfig(minerConfig, nodeConfig) {
       earningsacc: minerConfig.incomeAccount || minerConfig.earningsAcc,
       rpcs: ensureChainWsUrls(minerConfig, nodeConfig),
       tees: minerConfig.reservedTws || minerConfig.TeeList || null,
+      timeout: minerConfig.timeout || 12,
     },
   }
 }
