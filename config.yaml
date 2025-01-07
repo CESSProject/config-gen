@@ -102,7 +102,7 @@ cacher:
   ProtoContract: "0xce078A9098dF68189Cbe7A42FC629A4bDCe7dDD4"
   # Local storage nodes configuration file, currently only available for the "Cess Multi-Miner Admin" script.
   # The cacher automatically imports the storage node information started by the script through it.
-  MinerConfigPath: /opt/cess/mineradm/config.yaml
+  MinerConfigPath: /opt/cess/mineradmConf.yaml
   # You can manually configure the following connection options to make the cacher serve the specified retriever node:
   # By default, it points to the CESS official retriever node.
   # If you register your cacher to the cache protocol contract,

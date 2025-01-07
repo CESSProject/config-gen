@@ -10,7 +10,7 @@ const cacherSchema = Joi.object({
   TokenAcc: Joi.string().optional().allow(""),
   TokenAccSign: Joi.string().optional().allow(""),
   ProtoContract: Joi.string().required().default("0xce078A9098dF68189Cbe7A42FC629A4bDCe7dDD4"),
-  MinerConfigPath: Joi.string().required().default("/opt/cess/mineradm/config.yaml"),
+  MinerConfigPath: Joi.string().required().default("/opt/cess/mineradmConf.yaml"),
   CdnNodes: Joi.array().items(
     Joi.object({
       Account: Joi.string().optional().default("0xb7B43408864aEa0449D8F813380f8ec424F7a775"),

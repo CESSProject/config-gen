@@ -1,3 +1,5 @@
+const {imageTagByProfile} = require("../utils");
+const mineradmConfigPath = "/opt/cess/mineradm/config.yaml"
 const cacherHomePath = "/opt/cess/config/multiminer/cacher"
 
 function ensureRpcs(config) {
@@ -39,7 +41,7 @@ async function genCacherComposeConfig(config) {
   }
   return {
     container_name: 'cacher',
-    image: 'cesslab/cacher:testnet',
+    image: 'cesslab/cacher:' + imageTagByProfile(config.node.profile),
     network_mode: 'host',
     restart: 'always',
     command:  [
@@ -49,6 +51,7 @@ async function genCacherComposeConfig(config) {
     ],
     volumes: [
       config.cacher.WorkSpace + ':/opt/cess',
+      mineradmConfigPath + `:${config.cacher.MinerConfigPath}`,
     ],
     logging: {
       driver: "json-file",
