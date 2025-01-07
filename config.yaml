@@ -62,9 +62,9 @@ miners:
       - 127.0.0.1:8081
 
   - port: 15002
-    UseSpace: 1000
     apiendpoint: ""
     timeout: 12
+    UseSpace: 1000
     UseCpu: 2
     earningsAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     stakingAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
