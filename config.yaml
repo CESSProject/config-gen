@@ -19,7 +19,7 @@ chain:
 
 ## miner configurations (single storage miner mode)
 miner:
-  chainWsUrl: "ws://127.0.0.1:9944"
+  chainWsUrl: "ws://127.0.0.1:9944/ws/"
   backupChainWsUrls: []
   port: 15001
   space: 300
@@ -28,11 +28,16 @@ miner:
   diskPath: "/disks/1"
   bootAddr: "_dnsaddr.bootstrap-kldr.cess.cloud"
   extraCmdArgs: " -bb  ss --sfew 3"
+  apiendpoint: ""
 
 ## miner configurations  (multi storage miner mode)
 miners:
     # http server port
   - port: 15001
+    # Use this endpoint to receive/send file, can be a domain or ip:port, default value: hostPublicIp:port
+    apiendpoint: ""
+    # timeout for waiting for transaction packaging, default 12 seconds
+    timeout: 12
     # Maximum space used, the unit is GiB
     UseSpace: 1000
     # Number of cpu's used, 0 means use all
@@ -55,22 +60,21 @@ miners:
     TeeList:
       - 127.0.0.1:8080
       - 127.0.0.1:8081
-    # Bootstrap Nodes
-    Boot: _dnsaddr.boot-miner-testnet.cess.cloud
 
   - port: 15002
     UseSpace: 1000
+    apiendpoint: ""
+    timeout: 12
     UseCpu: 2
     earningsAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     stakingAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     mnemonic: lllll kkkkk jjjjj iiiii hhhhh ggggg fffff eeeee ddddd ccccc bbbbb aaaaa
     diskPath: "/mnt/cess_storage2"
-    chainWsUrl: ws://127.0.0.1:9944/
+    chainWsUrl: ws://127.0.0.1:9944
     backupChainWsUrls: []
     TeeList:
       - 127.0.0.1:8080
       - 127.0.0.1:8081
-    Boot: _dnsaddr.boot-miner-testnet.cess.cloud
 
 # cacher is a gateway which provide an integration interface for all of your storage miners so that user can access all of your storage miners with a unique interface.
 cacher:
