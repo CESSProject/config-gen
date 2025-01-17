@@ -32,48 +32,53 @@ miner:
 
 ## miner configurations  (multi storage miner mode)
 miners:
-  - port: 15001
+  - name: "miner1"
     # Use this endpoint to receive/send file, can be a domain or ip:port, default value: hostPublicIp:port
     apiendpoint: ""
-    # timeout for waiting for transaction packaging, default 12 seconds
-    timeout: 12
-    # Maximum space used, the unit is GiB
+    port: 15001
+    # Maximum space used in each miner, the unit is GiB
+    # The declaration space on chain is auto set by the value of `UseSpace after round up to the closest TB` when the miner first run
+    # If set UseSpace 2300, that means declare 3 TiB space on the chain
+    # If set UseSpace 300, that means declare 1 TiB space on the chain
     UseSpace: 1000
     # Number of cpu's used, 0 means use all
     UseCpu: 2
     # earnings account
     earningsAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     # Staking account
-    # If you fill in the staking account, the staking will be paid by the staking account,
-    # otherwise the staking will be paid by the signature account.
-    stakingAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    # If you fill in the staking account, the staking will be paid by the staking account you set,
+    # otherwise the staking will be paid by the signatureAcc(mnemonic).
+    stakingAcc: ""
     # Signature account mnemonic
     # each miner's mnemonic should be different
-    mnemonic: aaaaa bbbbb ccccc ddddd eeeee fffff ggggg hhhhh iiiii jjjjj kkkkk lllll
-    # a directory mount with filesystem
+    mnemonic: "aaaaa bbbbb ccccc ddddd eeeee fffff ggggg hhhhh iiiii jjjjj kkkkk lllll"
+    # miner work at this host path
     diskPath: "/mnt/cess_storage1"
-    # The rpc endpoint of the chain node
-    chainWsUrl: ws://127.0.0.1:9944/ws/
-    backupChainWsUrls: []
-    # Priority tee list address (will connect to others tee node in cess-network automatically if localhost cannot be connected)
-    TeeList:
-      - 127.0.0.1:8080
-      - 127.0.0.1:8081
+    # The rpc endpoint of the chain
+    # `official chain: "wss://testnet-rpc.cess.network"`
+    chainWsUrl: "ws://127.0.0.1:9944"
+    backupChainWsUrls: [ "wss://testnet-rpc.cess.network" ]
+    # Default 12 second for transaction with chain
+    Timeout: 12
+    # Tee list address
+    # Attention: Storage miner will not use public tee nodes on chain if set custom tee nodes in config.yaml
+    # TeeList:
+    #  - 127.0.0.1:8080
+    #  - 127.0.0.1:8081
 
-  - port: 15002
+  - name: "miner2"
     apiendpoint: ""
-    timeout: 12
+    port: 15002
     UseSpace: 1000
     UseCpu: 2
-    earningsAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    stakingAcc: cXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    mnemonic: lllll kkkkk jjjjj iiiii hhhhh ggggg fffff eeeee ddddd ccccc bbbbb aaaaa
+    earningsAcc: "cXxxx"
+    stakingAcc: ""
+    mnemonic: "xxx"
     diskPath: "/mnt/cess_storage2"
-    chainWsUrl: ws://127.0.0.1:9944/ws/
-    backupChainWsUrls: []
-    TeeList:
-      - 127.0.0.1:8080
-      - 127.0.0.1:8081
+    chainWsUrl: "ws://127.0.0.1:9944"
+    backupChainWsUrls: [ "wss://testnet-rpc.cess.network" ]
+    Timeout: 12
+
 
 watchdog:
   # enable miners monitor or not
