@@ -4,11 +4,7 @@ const minersHomePath = "/opt/cess/config/multiminer/miners"
 async function genMinersConfig(config) {
   let minersConfigs = []
   for (let minerConfig of config.miners) {
-    let cfg = adapterToNativeConfig(minerConfig, config.node)
-    if (!cfg.chain.tees) {
-      cfg.chain.tees = ["127.0.0.1:8080", "127.0.0.1:8081"]
-    }
-    minersConfigs.push(cfg)
+    minersConfigs.push(adapterToNativeConfig(minerConfig, config.node))
   }
   return {
     config: minersConfigs,
