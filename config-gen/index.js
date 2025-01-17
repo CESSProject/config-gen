@@ -153,7 +153,7 @@ async function genComposeConfig(config) {
       delete chain.network_mode;
       chain["hostname"] = chainHostName;
       chain["networks"] = ["ceseal"]
-      chain["ports"] = ["9944:9944", `${chainPort}:${chainPort}`];
+      chain["ports"] = ["9615:9615", "9944:9944", `${chainPort}:${chainPort}`];
       let chainCmd = chain.command;
       if (Array.isArray(chainCmd)) {
         chainCmd.push("--rpc-external", "--rpc-methods", "unsafe", "--rpc-cors", "all");

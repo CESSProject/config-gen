@@ -1,10 +1,10 @@
-const {imageTagByProfile} = require('../utils')
+const { imageTagByProfile, getPublicEndpoint} = require('../utils')
 const minerHomePath = "/opt/cess/storage/miner"
 
-function ensureChainWsUrls(config) {
+function ensureChainWsUrls(minerConfig, nodeConfig) {
   // TODO: For compatibility, keep the deprecated node.chainWsUrl and node.backupChainWsUrls
-  const chainWsUrl = config.miner.chainWsUrl || config.node.chainWsUrl;
-  const backupChainWsUrls = config.miner.backupChainWsUrls || config.node.backupChainWsUrls || [];
+  const chainWsUrl = minerConfig.chainWsUrl || nodeConfig.chainWsUrl;
+  const backupChainWsUrls = minerConfig.backupChainWsUrls || nodeConfig.backupChainWsUrls || [];
   let urls;
   if (!chainWsUrl) {
     urls = backupChainWsUrls;
@@ -18,20 +18,8 @@ function ensureChainWsUrls(config) {
 }
 
 async function genMinerConfig(config) {
-  const apiConfig = {
-    Rpc: ensureChainWsUrls(config),
-    Port: config.miner.port,
-    Boot: [config.miner.bootAddr || process.env["MINER_BOOT"] || `_dnsaddr.boot-miner-${imageTagByProfile(config.node.profile)}.cess.cloud`],
-    Mnemonic: config.miner.signPhrase,
-    EarningsAcc: config.miner.incomeAccount,
-    UseSpace: config.miner.space || 300,
-    Workspace: "/opt/miner-disk",
-    UseCpu: config.miner.useCpuCores || config.miner.UseCpu || 0,
-    StakingAcc: config.miner.stakerAccount || null,
-    TeeList: config.miner.reservedTws || null,
-  }
   return {
-    config: apiConfig,
+    config: adapterToNativeConfig(config.miner, config.node),
     paths: [{
       required: true,
       path: minerHomePath
@@ -39,23 +27,47 @@ async function genMinerConfig(config) {
   }
 }
 
+function adapterToNativeConfig(minerConfig, nodeConfig) {
+  return {
+    app: {
+      workspace: "/opt/miner-disk",
+      port: minerConfig.port,
+      maxusespace: minerConfig.space || minerConfig.UseSpace || 300,
+      cores: minerConfig.useCpuCores || minerConfig.UseCpu || 0,
+      apiendpoint: minerConfig.apiendpoint ? minerConfig.apiendpoint : getPublicEndpoint(minerConfig.port),
+    },
+    chain: {
+      mnemonic: minerConfig.signPhrase || minerConfig.mnemonic,
+      stakingacc: minerConfig.stakerAccount || minerConfig.stakingAcc || null,
+      earningsacc: minerConfig.incomeAccount || minerConfig.earningsAcc,
+      rpcs: ensureChainWsUrls(minerConfig, nodeConfig),
+      tees: minerConfig.reservedTws || minerConfig.TeeList || null,
+      timeout: minerConfig.timeout || 12,
+    },
+  }
+}
+
 async function genMinerComposeConfig(config) {
+  return doComposeConfigGenerate(config.miner, config.node, minerHomePath, config.miner.diskPath)
+}
+
+function doComposeConfigGenerate(minerConfig, nodeConfig, binDir, dataDir) {
   let args = [
     "run",
     "-c",
     "/opt/miner/config.yaml",
   ]
-  if (config.miner.extraCmdArgs) {
-    const extraCmdArgs = config.miner.extraCmdArgs.split(' ').map(e => e.trim()).filter(e => e !== '');
+  if (minerConfig.extraCmdArgs) {
+    const extraCmdArgs = minerConfig.extraCmdArgs.split(' ').map(e => e.trim()).filter(e => e !== '');
     args.push(...extraCmdArgs);
   }
   return {
-    image: 'cesslab/cess-miner:' + imageTagByProfile(config.node.profile),
+    image: 'cesslab/cess-miner:' + imageTagByProfile(nodeConfig.profile),
     network_mode: 'host',
     restart: 'always',
     volumes: [
-      minerHomePath + ':/opt/miner',
-      config.miner.diskPath + ':/opt/miner-disk',
+      binDir + ':/opt/miner',
+      dataDir + ':/opt/miner-disk',
     ],
     command: args,
     logging: {
@@ -65,7 +77,7 @@ async function genMinerComposeConfig(config) {
       }
     },
     healthcheck: {
-      test: `["CMD", "nc", "-zv", "127.0.0.1", "${config.miner.port}"]`,
+      test: `["CMD", "nc", "-zv", "127.0.0.1", "${minerConfig.port}"]`,
       interval: "1m",
       timeout: "10s",
       retries: 3
@@ -76,4 +88,6 @@ async function genMinerComposeConfig(config) {
 module.exports = {
   genMinerConfig,
   genMinerComposeConfig,
+  adapterToNativeConfig,
+  doComposeConfigGenerate,
 }
