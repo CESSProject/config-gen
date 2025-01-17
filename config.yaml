@@ -82,7 +82,7 @@ miners:
 
 watchdog:
   # enable miners monitor or not
-  enable: true
+  enable: false
   # external: run with 0.0.0.0 or 127.0.0.1
   external: true
   # apiUrl: watchdog-web request this apiUrl to fetch data from watchdog: <my_public_ip:13081 or a domain>
