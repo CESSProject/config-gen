@@ -16,7 +16,6 @@ async function genCesealComposeConfigs(config, _) {
     "--attestation-provider", `${specCfg.raType}`,
     "--public-endpoint", `${specCfg.endpointOnChain}`,
     "--mnemonic", `${specCfg.mnemonic}`,
-    "--fast-sync",
   ];
   if (specCfg.stashAccount) {
     cesealCmds.push("--operator", `${specCfg.stashAccount}`);
