@@ -74,7 +74,7 @@ async function genMinersComposeConfig(config) {
         }
       },
       healthcheck: {
-        test: `["CMD", "nc", "-zv", "127.0.0.1", "${config.miners[i].port}"]`,
+        test: ["CMD", "nc", "-zv", "127.0.0.1", config.miners[i].port.toString()],
         interval: "1m",
         timeout: "10s",
         retries: 3
