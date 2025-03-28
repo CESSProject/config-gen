@@ -1,7 +1,7 @@
 async function genWatchtowerComposeConfig() {
   let args = ["--cleanup", "--interval", "300"]
   return {
-    image: 'containrrr/watchtower',
+    image: 'cesslab/watchtower:latest',
     container_name: 'watchtower',
     network_mode: 'host',
     restart: 'always',

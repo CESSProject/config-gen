@@ -77,7 +77,7 @@ function doComposeConfigGenerate(minerConfig, nodeConfig, binDir, dataDir) {
       }
     },
     healthcheck: {
-      test: `["CMD", "nc", "-zv", "127.0.0.1", "${minerConfig.port}"]`,
+      test: ["CMD", "nc", "-zv", "127.0.0.1", minerConfig.port.toString()],
       interval: "1m",
       timeout: "10s",
       retries: 3

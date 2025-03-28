@@ -1,6 +1,6 @@
 async function genAutoHealComposeConfig() {
   return {
-    image: 'willfarrell/autoheal:latest',
+    image: 'cesslab/autoheal:latest',
     container_name: 'autoheal',
     network_mode: 'host',
     tty: true,
@@ -11,7 +11,7 @@ async function genAutoHealComposeConfig() {
     environment: [
       'AUTOHEAL_CONTAINER_LABEL=all',
       'AUTOHEAL_INTERVAL=60',
-      'AUTOHEAL_START_PERIOD=180',
+      'AUTOHEAL_START_PERIOD=600',
       'AUTOHEAL_DEFAULT_STOP_TIMEOUT=10',
     ],
   }
