@@ -1,6 +1,6 @@
 const { imageTagByProfile, chainHostName } = require("../utils");
 
-const cesealHomePath = "/opt/cess/authority/ceseal";
+const cesealHomePath = "/opt/cess/tee/ceseal";
 
 async function genCesealComposeConfigs(config, _) {
   const specCfg = config.ceseal;
@@ -31,7 +31,7 @@ async function genCesealComposeConfigs(config, _) {
       expose: [8000],
       ports: [`${specCfg.publicPort}:19999`],
       environment: [
-        "RUST_LOG=debug,h2=info,hyper=info,reqwest=info,tower=info",
+        "RUST_LOG=info, h2=info, hyper=info, reqwest=info, tower=info",
         "RUST_BACKTRACE=full",
         `EXTRA_OPTS=--role=${specCfg.role} `,
         `RA_METHOD=${specCfg.raType}`
@@ -54,7 +54,7 @@ async function genCesealComposeConfigs(config, _) {
       hostname: cifrostHostname,
       restart: "always",
       command: cesealCmds,
-      environment: ["RUST_LOG=debug,h2=info,hyper=info,reqwest=info,tower=info", "RUST_BACKTRACE=full"],
+      environment: ["RUST_LOG=info, h2=info,hyper=info, reqwest=info, tower=info", "RUST_BACKTRACE=full"],
       networks: ["ceseal"],
       extra_hosts: ["host.docker.internal:host-gateway"],
       depends_on: {

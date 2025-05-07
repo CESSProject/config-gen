@@ -38,10 +38,10 @@ function adapterToNativeConfig(minerConfig, nodeConfig) {
     },
     chain: {
       mnemonic: minerConfig.signPhrase || minerConfig.mnemonic,
-      stakingacc: minerConfig.stakerAccount || minerConfig.stakingAcc || null,
+      stakingacc: minerConfig.stakerAccount || minerConfig.stakingAcc,
       earningsacc: minerConfig.incomeAccount || minerConfig.earningsAcc,
       rpcs: ensureChainWsUrls(minerConfig, nodeConfig),
-      tees: minerConfig.reservedTws || minerConfig.TeeList || null,
+      tees: minerConfig.reservedTws || minerConfig.TeeList || "",
       timeout: minerConfig.timeout || 12,
     },
   }

@@ -1,6 +1,6 @@
 ## node configurations template
 node:
-  ## the mode of node: authority/storage/watcher/multiminer
+  ## the mode of node: tee/storage/validator/rpcnode/multiminer
   mode: "multiminer"
   ## the profile of node: devnet/testnet/mainnet
   profile: "testnet"
@@ -126,9 +126,9 @@ ceseal:
   chainWsUrl: "ws://127.0.0.1:9944"
   endpointOnChain: "http://example.com:19999"
   publicPort: 19999
-  role: Full
+  role: full
   mnemonic: "worth swallow between garage novel repair february panther million report hip token"
 
 nginx:
-  confPath: "/opt/cess/authority/proxy/conf"
-  logPath: "/opt/cess/authority/proxy/log"
+  confPath: "/opt/cess/tee/proxy/conf"
+  logPath: "/opt/cess/tee/proxy/log"
