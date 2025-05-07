@@ -38,7 +38,7 @@ function adapterToNativeConfig(minerConfig, nodeConfig) {
     },
     chain: {
       mnemonic: minerConfig.signPhrase || minerConfig.mnemonic,
-      stakingacc: minerConfig.stakerAccount || minerConfig.stakingAcc,
+      stakingacc: minerConfig.stakerAccount || minerConfig.stakingAcc || null,
       earningsacc: minerConfig.incomeAccount || minerConfig.earningsAcc,
       rpcs: ensureChainWsUrls(minerConfig, nodeConfig),
       tees: minerConfig.reservedTws || minerConfig.TeeList || "",

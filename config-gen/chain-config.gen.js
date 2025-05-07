@@ -64,6 +64,8 @@ async function genChainComposeConfig(config) {
     args.push('--max-runtime-instances', '32', '--validator', '--pruning', 'archive');
   } else if (config.node.mode === "rpcnode" || config.node.mode === "multiminer") {
     args.push('--pruning', `${config.chain.pruning}`, '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
+  } else if (config.node.mode === "storage") {
+    // todo something
   } else {
     throw new Error(`Unsupported node mode: ${config.node.mode}`);
   }
