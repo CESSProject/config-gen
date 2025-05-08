@@ -41,7 +41,7 @@ function adapterToNativeConfig(minerConfig, nodeConfig) {
       stakingacc: minerConfig.stakerAccount || minerConfig.stakingAcc || null,
       earningsacc: minerConfig.incomeAccount || minerConfig.earningsAcc,
       rpcs: ensureChainWsUrls(minerConfig, nodeConfig),
-      tees: minerConfig.reservedTws || minerConfig.TeeList || null,
+      tees: minerConfig.reservedTws || minerConfig.TeeList || "",
       timeout: minerConfig.timeout || 12,
     },
   }

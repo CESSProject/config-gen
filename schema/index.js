@@ -14,7 +14,7 @@ function getConfigSchema(config) {
   }
 
   const mode = config.node.mode;
-  if (mode === "authority") {
+  if (mode === "tee") {
     sMap["chain"] = chainSchema.optional()
     sMap["ceseal"] = cesealSchema.required()
     sMap["nginx"] = nginxSchema.optional()
@@ -28,7 +28,7 @@ function getConfigSchema(config) {
     sMap["miners"] = minersSchema.required()
     sMap["watchdog"] = watchdogSchema.optional()
   }
-  else if (mode === "watcher" || mode === "rpcnode") {
+  else if (mode === "validator" || mode === "rpcnode") {
     sMap["chain"] = chainSchema.required()
   }
   else {

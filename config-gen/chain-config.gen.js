@@ -1,8 +1,8 @@
-const {imageTagByProfile} = require('../utils')
+const { imageTagByProfile } = require('../utils')
 const fs = require('fs-extra')
 
 function getChainHomePath(config) {
-  const nodeMode = config.node.mode || "authority"
+  const nodeMode = config.node.mode || "tee"
   if (nodeMode === "multiminer") {
     // when press tab in linux, it can distinguish /opt/cess/data and /opt/cess/minersadm
     return "/opt/cess/config/" + nodeMode + "/chain"
@@ -58,10 +58,16 @@ async function genChainComposeConfig(config) {
     '--prometheus-external'
   ]
 
-  if (config.node.mode === "authority") {
-    args.push('--validator', '--pruning', 'archive')
-  } else if (config.node.mode === "rpcnode" || config.node.mode === "watcher" || config.node.mode === "multiminer") {
-    args.push('--pruning', `${config.chain.pruning}`, '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
+  if (config.node.mode === "tee") {
+    args.push('--validator', '--state-pruning', 'archive')
+  } else if (config.node.mode === "validator") {
+    args.push('--max-runtime-instances', '32', '--validator', '--state-pruning', 'archive');
+  } else if (config.node.mode === "rpcnode") {
+    args.push('--state-pruning', `${config.chain.pruning}`, '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
+  } else if (config.node.mode === "multiminer" || config.node.mode === "storage") {
+    args.push('--state-pruning', 'archive', '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
+  } else {
+    throw new Error(`Unsupported node mode: ${config.node.mode}`);
   }
 
   if (config.chain.extraCmdArgs) {
@@ -69,26 +75,6 @@ async function genChainComposeConfig(config) {
     args.push(...extraCmdArgs);
   }
 
-  //ownnet just for devleper testing the new feature just finished,so just use simply argument run
-  if (config.node.profile == "ownnet") {
-    let arg = [
-      '--dev',
-      '--state-pruning',
-      'archive',
-    ]
-    return {
-      image: 'cesslab/cess-chain:' + imageTagByProfile(config.node.profile),
-      network_mode: 'host',
-      command: arg,
-      logging: {
-        driver: "json-file",
-        options: {
-          "max-size": "300m",
-          "max-file": "10"
-        }
-      },
-    }
-  }
   return {
     image: 'cesslab/cess-chain:' + imageTagByProfile(config.node.profile),
     network_mode: 'host',

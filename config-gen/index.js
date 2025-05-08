@@ -128,7 +128,7 @@ async function genComposeConfig(config) {
     if (cg.name === "watchdog" && !config.watchdog.enable) {
       continue
     }
-    if (isExternalChain && cg.name === "chain" && !(mode === "watcher" || mode === "rpcnode")) {  //RPC-Node mode is not affected by 'node.externalChain'
+    if (isExternalChain && cg.name === "chain" && mode !== "rpcnode") {  // RPC-Node mode is not affected by 'node.externalChain'
       continue;
     }
     const serviceCfg = await cg.composeFunc(config);
