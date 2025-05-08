@@ -55,17 +55,20 @@ async function genChainComposeConfig(config) {
     '75',
     '--rpc-max-response-size',
     '256',
-    '--prometheus-external'
+    '--prometheus-external',
+    "--rpc-external",
+    "--rpc-cors",
+    "all"
   ]
 
   if (config.node.mode === "tee") {
     args.push('--validator', '--state-pruning', 'archive')
   } else if (config.node.mode === "validator") {
-    args.push('--max-runtime-instances', '32', '--validator', '--state-pruning', 'archive');
+    args.push('--max-runtime-instances', '32', '--validator', '--state-pruning', 'archive', "--rpc-methods", "unsafe", );
   } else if (config.node.mode === "rpcnode") {
-    args.push('--state-pruning', `${config.chain.pruning}`, '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
+    args.push('--state-pruning', `${config.chain.pruning}`, '--rpc-max-connections', '65535');
   } else if (config.node.mode === "multiminer" || config.node.mode === "storage") {
-    args.push('--state-pruning', 'archive', '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
+    args.push('--state-pruning', 'archive', '--rpc-max-connections', '65535');
   } else {
     throw new Error(`Unsupported node mode: ${config.node.mode}`);
   }
