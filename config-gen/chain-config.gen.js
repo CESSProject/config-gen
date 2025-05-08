@@ -59,13 +59,13 @@ async function genChainComposeConfig(config) {
   ]
 
   if (config.node.mode === "tee") {
-    args.push('--validator', '--pruning', 'archive')
+    args.push('--validator', '--state-pruning', 'archive')
   } else if (config.node.mode === "validator") {
-    args.push('--max-runtime-instances', '32', '--validator', '--pruning', 'archive');
-  } else if (config.node.mode === "rpcnode" || config.node.mode === "multiminer") {
-    args.push('--pruning', `${config.chain.pruning}`, '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
-  } else if (config.node.mode === "storage") {
-    // todo something
+    args.push('--max-runtime-instances', '32', '--validator', '--state-pruning', 'archive');
+  } else if (config.node.mode === "rpcnode") {
+    args.push('--state-pruning', `${config.chain.pruning}`, '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
+  } else if (config.node.mode === "multiminer" || config.node.mode === "storage") {
+    args.push('--state-pruning', 'archive', '--rpc-max-connections', '65535', '--rpc-external', '--rpc-cors', 'all');
   } else {
     throw new Error(`Unsupported node mode: ${config.node.mode}`);
   }
