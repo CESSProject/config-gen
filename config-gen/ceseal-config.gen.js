@@ -2,24 +2,31 @@ const { imageTagByProfile, chainHostName } = require("../utils");
 
 const cesealHomePath = "/opt/cess/tee/ceseal";
 
+async function genCesealConfig(config) {
+  const cfg = config.ceseal;
+  const raw_cfg = {
+    endpoint: cfg.endpointOnChain,
+    mnemonic: cfg.mnemonic,
+    stash_account: cfg.stash_account,
+    attestation_provider: cfg.attestation_provider,
+    role: cfg.role,
+  };
+  return {
+    config: raw_cfg,
+    paths: [{
+      required: true,
+      path: cesealHomePath,
+    }],
+  }
+}
+
 async function genCesealComposeConfigs(config, _) {
   const specCfg = config.ceseal;
-  let chainWsUrl = specCfg.chainWsUrl;
-  if (!config.node.externalChain && chainWsUrl.indexOf(chainHostName) === -1) {
-    chainWsUrl = `ws://${chainHostName}:9944`
-  }
   const cesealHostname = "ceseal";
-  const cifrostHostname = "cifrost";
   let cesealCmds = [
-    "--chain-ws-endpoint", `${chainWsUrl}`,
-    "--internal-endpoint", `http://ceseal:8000`,
-    "--attestation-provider", `${specCfg.raType}`,
-    "--public-endpoint", `${specCfg.endpointOnChain}`,
-    "--mnemonic", `${specCfg.mnemonic}`,
+    "--config", '/data/storage_files/config.toml',
+    "--listening-port", `${specCfg.publicPort}`,
   ];
-  if (specCfg.stashAccount) {
-    cesealCmds.push("--operator", `${specCfg.stashAccount}`);
-  }
 
   return [
     {
@@ -28,16 +35,20 @@ async function genCesealComposeConfigs(config, _) {
       hostname: cesealHostname,
       restart: "always",
       devices: ["/dev/sgx_enclave", "/dev/sgx_provision"],
-      expose: [8000],
+      expose: [19999],
       ports: [`${specCfg.publicPort}:19999`],
       environment: [
-        "RUST_LOG=info, h2=info, hyper=info, reqwest=info, tower=info",
+        "RUST_LOG=info",
         "RUST_BACKTRACE=full",
-        `EXTRA_OPTS=--role=${specCfg.role} `,
+        `EXTRA_OPTS=${cesealCmds.join(" ")}`,
         `RA_METHOD=${specCfg.raType}`
       ],
       networks: ["ceseal"],
-      volumes: [`${cesealHomePath}/data:/opt/ceseal/data`, `${cesealHomePath}/backups:/opt/ceseal/backups`],
+      volumes: [
+        `${cesealHomePath}/config.toml:/opt/ceseal/releases/current/data/storage_files/config.toml`,
+        `${cesealHomePath}/data:/opt/ceseal/data`,
+        `${cesealHomePath}/backups:/opt/ceseal/backups`
+      ],
       logging: {
         driver: "json-file",
         options: {
@@ -46,36 +57,10 @@ async function genCesealComposeConfigs(config, _) {
         },
       },
     },
-    {
-      image: `cesslab/cifrost:${imageTagByProfile(
-        config.node.profile
-      )}`,
-      container_name: cifrostHostname,
-      hostname: cifrostHostname,
-      restart: "always",
-      command: cesealCmds,
-      environment: ["RUST_LOG=info, h2=info,hyper=info, reqwest=info, tower=info", "RUST_BACKTRACE=full"],
-      networks: ["ceseal"],
-      extra_hosts: ["host.docker.internal:host-gateway"],
-      depends_on: {
-        ceseal: {
-          condition: "service_healthy"
-        },
-        chain: {
-          condition: "service_healthy"
-        }
-      },
-      logging: {
-        driver: "json-file",
-        options: {
-          "max-size": "500m",
-          "max-file": "10",
-        },
-      },
-    },
   ];
 }
 
 module.exports = {
-  genCesealComposeConfigs: genCesealComposeConfigs,
+  genCesealConfig,
+  genCesealComposeConfigs,
 };
