@@ -1,7 +1,6 @@
 const Joi = require("joi");
 
 const cesealSchema = Joi.object({
-  raType: Joi.string().default("dcap"),
   endpointOnChain: Joi.string().uri(),
   publicPort: Joi.number().port().default(19999),
   stashAccount: Joi.string().optional().empty(""),

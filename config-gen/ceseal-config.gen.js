@@ -41,7 +41,6 @@ async function genCesealComposeConfigs(config, _) {
         "RUST_LOG=info",
         "RUST_BACKTRACE=full",
         `EXTRA_OPTS=${cesealCmds.join(" ")}`,
-        `RA_METHOD=${specCfg.raType}`
       ],
       networks: ["ceseal"],
       volumes: [
