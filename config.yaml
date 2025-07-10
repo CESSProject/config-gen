@@ -83,15 +83,15 @@ miners:
 watchdog:
   # enable miners monitor or not
   enable: false
-  # external: run with 0.0.0.0 or 127.0.0.1
+  # external: run with 0.0.0.0 or 127.0.0.1, env: WATCHDOG_IS_EXTERNAL
   external: true
   # apiUrl: watchdog-web request this apiUrl to fetch data from watchdog: <my_public_ip:13081 or a domain>
   # if empty or null, will set this value to http://<public ip>:13081 automatically
   apiUrl: ""
-  # watchdog server listen http port at: 13081
+  # watchdog server listen http port at: 13081, env: WATCHDOG_PORT
   port: 13081
-  # the interval of query data from chain for each miner, 30 <= scrapeInterval <= 300
-  scrapeInterval: 60
+  # the interval of query data from chain for each miner, 1800 <= scrapeInterval <= 3600, env: WATCHDOG_SCRAPE_INTERVAL
+  scrapeInterval: 1800
   hosts:
     - ip: 127.0.0.1 # 127.x, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 is a private IP
       # make sure docker daemon listen at 2375: https://docs.docker.com/config/daemon/remote-access/
@@ -120,6 +120,11 @@ watchdog:
       receiver:
         - example1@gmail.com
         - example2@outlook.com
+  auth:
+    username: "admin" # env: WATCHDOG_USERNAME, default: cess
+    password: "passwd" # env: WATCHDOG_PASSWORD, default: Cess123456
+    jwt_secret_key: "your-random-secret-key" # env: WATCHDOG_JWT_SECRET
+    token_expiry: 1  # 1 hour # env: WATCHDOG_TOKEN_EXPIRY
 
 ## ceseal configurations
 ceseal:
