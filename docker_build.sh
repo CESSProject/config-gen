@@ -40,7 +40,7 @@ done
 DOCKER_FILE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 CTX_DIR=$DOCKER_FILE_DIR
 IMAGEID="cesslab/config-gen"
-if [ x"$NETWORK" == x"devnet" ] || [ x"$NETWORK" == x"testnet" ] || [ x"$NETWORK" == x"mainnet" ] ]; then
+if [ x"$NETWORK" == x"devnet" ] || [ x"$NETWORK" == x"testnet" ] || [ x"$NETWORK" == x"mainnet" ]; then
     IMAGEID="$IMAGEID:$NETWORK"
 else
     echo "invalid network option, use 'testnet' instead"
