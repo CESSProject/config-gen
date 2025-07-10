@@ -67,7 +67,13 @@ const watchdogSchema = Joi.object({
       then: Joi.optional(),
       otherwise: Joi.optional()
     })
-  }).required()
+  }).optional(),
+  auth: Joi.object({
+    username: Joi.string().optional().allow(""),
+    password: Joi.string().optional().allow(""),
+    jwt_secret_key: Joi.string().optional().allow(""),
+    token_expiry: Joi.number().optional(),
+  }).optional()
 });
 
 module.exports = {
