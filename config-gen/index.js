@@ -11,6 +11,7 @@ const { genCesealComposeConfigs } = require("./ceseal-config.gen");
 const { genNginxComposeConfigs } = require("./nginx-config.gen");
 const { genWatchtowerComposeConfig } = require("./watchtower-config.gen");
 const { genAutoHealComposeConfig } = require("./autoheal-config.gen");
+const { genCacherConfig, genCacherComposeConfig } = require("./cacher-config.gen");
 const { logger } = require("../logger");
 const thirdPartyComponent = ["watchtower", "autoheal"]
 
@@ -67,6 +68,12 @@ const configGenerators = [
     configFunc: genWatchdogConfig,
     to: path.join("watchdog", "config.yaml"),
     composeFunc: genWatchdogComposeConfig,
+  },
+  {
+    name: "cacher",
+    configFunc: genCacherConfig,
+    to: path.join("cacher", "config.yaml"),
+    composeFunc: genCacherComposeConfig,
   },
 ];
 
@@ -125,7 +132,7 @@ async function genComposeConfig(config) {
     if (!(config[cg.name] || thirdPartyComponent.includes(cg.name))) {
       continue;
     }
-    if (cg.name === "watchdog" && !config.watchdog.enable) {
+    if ((cg.name === "watchdog" && !config.watchdog.enable) || (cg.name === "cacher" && !config.cacher.enable)) {
       continue
     }
     if (isExternalChain && cg.name === "chain" && mode !== "rpcnode") {  // RPC-Node mode is not affected by 'node.externalChain'

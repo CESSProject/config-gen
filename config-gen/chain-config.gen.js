@@ -21,7 +21,7 @@ async function genChainConfig(config) {
 }
 
 async function genChainComposeConfig(config) {
-  let chainSpec = "cess-testnet"
+  let chainSpec = `cess-${config.node.profile}`
   let volumes = [
     getChainHomePath(config) + ':/opt/cess/data'
   ];
