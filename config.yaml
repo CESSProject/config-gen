@@ -3,7 +3,7 @@ node:
   ## the mode of node: tee/storage/validator/rpcnode/multiminer
   mode: "tee"
   ## the profile of node: devnet/testnet/mainnet
-  profile: "testnet"
+  profile: "testnet2"
   
 ## chain configurations
 chain:
