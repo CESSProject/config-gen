@@ -76,7 +76,7 @@ async function genWatchdogComposeConfig(config) {
       }
     },
     healthcheck: {
-      test: `["CMD", "nc", "-zv", "127.0.0.1", "13080"]`,
+      test: ["CMD", "nc", "-zv", "127.0.0.1", "13080"],
       interval: "1m",
       timeout: "10s",
       retries: 3
@@ -96,7 +96,7 @@ async function genWatchdogComposeConfig(config) {
       }
     },
     healthcheck: {
-      test: `["CMD", "nc", "-zv", "127.0.0.1", "${config.watchdog.port}"]`,
+      test: ["CMD", "nc", "-zv", "127.0.0.1", config.watchdog.port.toString()],
       interval: "1m",
       timeout: "10s",
       retries: 3
