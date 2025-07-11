@@ -5,7 +5,7 @@ const nodeSchema = Joi.object({
   chainWsUrl: Joi.string().allow("").optional(),  //deprecated
   backupChainWsUrls: Joi.array().optional(),  //deprecated
   region: Joi.string().default("en"),
-  profile: Joi.string().valid('devnet', 'testnet', 'mainnet').default("testnet"),
+  profile: Joi.string().valid('devnet', 'testnet2', 'testnet', 'mainnet').default("testnet2"),
   noWatchContainers: Joi.array().optional(),
   externalChain: Joi.boolean().truthy(1, 'y').falsy(0, 'n').optional().default(false),
 })

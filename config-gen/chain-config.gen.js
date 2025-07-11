@@ -21,12 +21,12 @@ async function genChainConfig(config) {
 }
 
 async function genChainComposeConfig(config) {
-  let chainSpec = `cess-${config.node.profile}`
+  let chainSpec = config.chain.chainSpec || "testnet2"
   let volumes = [
     getChainHomePath(config) + ':/opt/cess/data'
   ];
   if (config.node.profile === "devnet") {
-    chainSpec = config.chain.chainSpec || "cess-devnet"
+    chainSpec = "devnet"
     // in the config-gen container environment
     const customSpecInCg = "/opt/app/etc/customSpecRaw.json";
     if (fs.pathExistsSync(customSpecInCg)) {
@@ -45,16 +45,12 @@ async function genChainComposeConfig(config) {
     `${config.chain.name}`,
     '--rpc-port',
     '9944',
-    '--execution',
-    'WASM',
     '--wasm-execution',
     'compiled',
     '--in-peers',
     '75',
     '--out-peers',
     '75',
-    '--rpc-max-response-size',
-    '256',
     '--prometheus-external',
     "--rpc-external",
     "--rpc-cors",
