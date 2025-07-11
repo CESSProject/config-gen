@@ -7,9 +7,9 @@ async function genCesealConfig(config) {
   const raw_cfg = {
     endpoint: cfg.endpointOnChain,
     mnemonic: cfg.mnemonic,
-    stash_account: cfg.stash_account,
-    attestation_provider: cfg.attestation_provider,
-    role: cfg.role,
+    stash_account: cfg.stashAccount,    
+    role: cfg.role.charAt(0).toUpperCase() + cfg.role.slice(1),
+    attestation_provider: "dcap"
   };
   return {
     config: raw_cfg,
