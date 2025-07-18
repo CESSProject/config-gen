@@ -2,9 +2,8 @@ const { imageTagByProfile, getPublicEndpoint} = require('../utils')
 const minerHomePath = "/opt/cess/storage/miner"
 
 function ensureChainWsUrls(minerConfig, nodeConfig) {
-  // TODO: For compatibility, keep the deprecated node.chainWsUrl and node.backupChainWsUrls
-  const chainWsUrl = minerConfig.chainWsUrl || nodeConfig.chainWsUrl;
-  const backupChainWsUrls = minerConfig.backupChainWsUrls || nodeConfig.backupChainWsUrls || [];
+  const chainWsUrl = minerConfig.chainWsUrl;
+  const backupChainWsUrls = minerConfig.backupChainWsUrls || [];
   let urls;
   if (!chainWsUrl) {
     urls = backupChainWsUrls;
