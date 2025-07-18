@@ -2,8 +2,6 @@ const Joi = require('joi')
 
 const nodeSchema = Joi.object({
   mode: Joi.string().valid('tee', 'storage', 'rpcnode', 'validator', 'multiminer').required(),
-  chainWsUrl: Joi.string().allow("").optional(),  //deprecated
-  backupChainWsUrls: Joi.array().optional(),  //deprecated
   region: Joi.string().default("en"),
   profile: Joi.string().valid('devnet', 'testnet2', 'testnet', 'mainnet').default("testnet2"),
   noWatchContainers: Joi.array().optional(),
