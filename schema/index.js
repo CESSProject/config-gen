@@ -16,7 +16,6 @@ function getConfigSchema(config) {
 
   const mode = config.node.mode;
   if (mode === "tee") {
-    sMap["chain"] = chainSchema.optional()
     sMap["ceseal"] = cesealSchema.required()
     sMap["nginx"] = nginxSchema.optional()
   }

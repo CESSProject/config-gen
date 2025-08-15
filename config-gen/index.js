@@ -7,7 +7,7 @@ const { genChainConfig, genChainComposeConfig } = require("./chain-config.gen");
 const { genMinerConfig, genMinerComposeConfig } = require("./miner-config.gen");
 const { genMinersConfig, genMinersComposeConfig } = require("./miners-config.gen");
 const { genWatchdogConfig, genWatchdogComposeConfig } = require("./watchdog-config.gen");
-const { genCesealComposeConfigs } = require("./ceseal-config.gen");
+const { genCesealConfig, genCesealComposeConfigs } = require("./ceseal-config.gen");
 const { genNginxComposeConfigs } = require("./nginx-config.gen");
 const { genWatchtowerComposeConfig } = require("./watchtower-config.gen");
 const { genAutoHealComposeConfig } = require("./autoheal-config.gen");
@@ -49,6 +49,8 @@ const configGenerators = [
   },
   {
     name: "ceseal",
+    configFunc: genCesealConfig,
+    to: path.join("ceseal", "config.toml"),
     composeFunc: genCesealComposeConfigs,
   },
   {
@@ -102,7 +104,7 @@ async function genConfig(config, outputOpts) {
 async function genComposeConfig(config) {
   const mode = config.node.mode;
   const isExternalChain = config.node.externalChain;
-  if (!isExternalChain && !config.chain) {
+  if (!isExternalChain && !config.chain && config.node.mode !== "tee") {
     throw new Error("Set to use local chain but without corresponding configuration");
   }
   // docker compose config generation
@@ -154,18 +156,6 @@ async function genComposeConfig(config) {
         driver: "bridge",
       },
     };
-    let chain = output["services"]?.chain;
-    if (chain) {
-      const chainPort = config.chain.port;
-      delete chain.network_mode;
-      chain["hostname"] = chainHostName;
-      chain["networks"] = ["ceseal"]
-      chain["ports"] = ["9615:9615", "9944:9944", `${chainPort}:${chainPort}`];
-      let chainCmd = chain.command;
-      if (Array.isArray(chainCmd)) {
-        chainCmd.push("--rpc-methods", "unsafe");
-      }
-    }
   }
 
   handleContainersToWatch(output, config?.node?.noWatchContainers);

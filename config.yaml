@@ -1,14 +1,10 @@
 ## node configurations template
 node:
   ## the mode of node: tee/storage/validator/rpcnode/multiminer
-  mode: "multiminer"
+  mode: "tee"
   ## the profile of node: devnet/testnet/mainnet
-  profile: "testnet"
-  # default chain url for miner
-  chainWsUrl: ""
-  # default backup chain urls for miner
-  backupChainWsUrls: []
-
+  profile: "testnet2"
+  
 ## chain configurations
 chain:
   ## the name of chain node
@@ -168,12 +164,11 @@ watchdog:
 
 ## ceseal configurations
 ceseal:
-  chainWsUrl: "ws://127.0.0.1:9944"
   endpointOnChain: "http://example.com:19999"
   publicPort: 19999
   role: full
   mnemonic: "worth swallow between garage novel repair february panther million report hip token"
 
-nginx:
-  confPath: "/opt/cess/tee/proxy/conf"
-  logPath: "/opt/cess/tee/proxy/log"
+# nginx:
+#   confPath: "/opt/cess/tee/proxy/conf"
+#   logPath: "/opt/cess/tee/proxy/log"
