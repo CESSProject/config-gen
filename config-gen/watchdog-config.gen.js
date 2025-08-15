@@ -15,8 +15,8 @@ async function genWatchdogConfig(config) {
     updatedWatchdogSchema.enable = copyConfig.enable
     updatedWatchdogSchema.scrapeInterval = copyConfig.scrapeInterval
     updatedWatchdogSchema.hosts = copyConfig.hosts
-    updatedWatchdogSchema.alert = copyConfig.alert
-    updatedWatchdogSchema.auth = copyConfig.auth
+    updatedWatchdogSchema.alert = copyConfig.alert || {}
+    updatedWatchdogSchema.auth = copyConfig.auth || {}
     return updatedWatchdogSchema;
   }
 

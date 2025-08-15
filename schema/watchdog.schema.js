@@ -50,7 +50,7 @@ const watchdogSchema = Joi.object({
       }),
     })).min(1).required(),
   alert: Joi.object({
-    enable: Joi.boolean().required().default(false),
+    enable: Joi.boolean().optional().default(false),
     webhook: Joi.array().items(Joi.string().uri()).when('enable', {
       is: true,
       then: Joi.optional(),
