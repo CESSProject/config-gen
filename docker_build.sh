@@ -6,7 +6,7 @@ usage() {
 	echo "    $0 [options]"
     echo "Options:"
     echo "     -p publish image"
-    echo "     -n network profile, options: devnet, testnet2, mainnet, testnet"
+    echo "     -n network profile, options: devnet, premainnet, mainnet, testnet"
     echo "     -x use http proxy"
 	exit 1;
 }
@@ -40,7 +40,7 @@ done
 DOCKER_FILE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 CTX_DIR=$DOCKER_FILE_DIR
 IMAGEID="cesslab/config-gen"
-if [ x"$NETWORK" == x"devnet" ] || [ x"$NETWORK" == x"testnet" ] || [ x"$NETWORK" == x"mainnet" ] || [ x"$NETWORK" == x"testnet2" ]; then
+if [ x"$NETWORK" == x"devnet" ] || [ x"$NETWORK" == x"testnet" ] || [ x"$NETWORK" == x"mainnet" ] || [ x"$NETWORK" == x"premainnet" ]; then
     IMAGEID="$IMAGEID:$NETWORK"
 else
     echo "invalid network option, use 'testnet' instead"
